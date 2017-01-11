@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="modtree" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" phpdoc-package="modtree"
+       version="0.0.1">
+
+    <object class="modTreeItem" table="modtree_items" extends="xPDOSimpleObject">
+        <field key="master" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index"  />
+        <field key="slave" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+        <field key="linkdate" dbtype="timestamp" phptype="time" null="true" index="index" />
+        <field key="linktitle" dbtype="varchar"  precision="255" phptype="string"  null="true"  index="index" />
+        <field key="linktext" dbtype="mediumtext" phptype="string" null="true"  />
+        <field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+
+        <aggregate alias="ResourceMaster" class="modResource" local="master" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="ResourceSlave" class="modResource" local="slave" foreign="id" cardinality="one" owner="foreign" />
+
+    </object>
+
+</model>

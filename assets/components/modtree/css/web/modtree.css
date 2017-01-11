@@ -1,0 +1,87 @@
+
+/*clearfix*/
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+
+.mod-tree__tree {
+    float: left;
+    width: 39%;
+}
+
+.mod-tree__content {
+    float: right;
+    width: 57%;
+    padding-left: 1em;
+}
+
+.mod-tree__item {
+    list-style-type: none;
+}
+.mod-tree__item-title {
+    border: 1px #ffffff;
+}
+.mod-tree__item-title.active {
+    border: 1px dashed #137899;
+}
+.mod-tree__list {
+    padding: 0;
+}
+.mod-tree__item-icon {
+    float:left;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+}
+
+.mod-tree__item-icon.open {
+    background-image: url(/assets/components/modtree/img/minus.gif);
+}
+
+.mod-tree__item-icon.closed,
+.mod-tree__item-icon.promised
+{
+    background-image: url(/assets/components/modtree/img/plus.gif);
+}
+
+.mod-tree__item-icon.leaf  {
+    background-image: url(/assets/components/modtree/img/leaf.gif);
+}
+.mod-tree__item-title {
+    padding-left: 28px;
+    cursor: pointer;
+}
+
+.mod-tree__item-content {
+    margin-left: 18px;
+    overflow: hidden;
+    /*-webkit-transition: all 0.6s ease-in-out;*/
+    /*-moz-transition: all 0.6s ease-in-out;*/
+    /*-o-transition: all 0.6s ease-in-out;*/
+    /*transition: all 0.6s ease-in-out;*/
+}
+
+.mod-tree__item.closed .mod-tree__item-content {
+    height: 0;
+}
+.mod-tree__item.open .mod-tree__item-content {
+    height: auto;
+}
+
+@media (max-width: 767px) {
+
+    .mod-tree__tree,
+    .mod-tree__content{
+        float: none;
+        width: 100%;
+    }
+
+    .mod-tree__content {
+        border: 0;
+        padding: 0;
+    }
+}
