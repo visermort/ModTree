@@ -53,6 +53,10 @@ class modTreeItemGetListProcessor extends modObjectGetListProcessor
     {
         $array = $object->toArray();
         $array['actions'] = array();
+        $array['masterPagetitle'] = $this->modx->getObject('modResource', $array['master'])
+                ->get('pagetitle').' ('.$array['master'].')';
+        $array['slavePagetitle'] = $this->modx->getObject('modResource', $array['slave'])
+                ->get('pagetitle').' ('.$array['slave'].')';
 
         // Edit
         $array['actions'][] = array(

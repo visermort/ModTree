@@ -51,7 +51,7 @@ Ext.extend(modTree.window.CreateItem, MODx.Window, {
             allowBlank: false
         },
             {
-             xtype: 'modtree-combo-resourcecombo',
+            xtype: 'modtree-combo-resourcecombo',
             fieldLabel: _('modtree_item_slave'),
             name: 'slave',
             hiddenName: 'slave',
@@ -61,8 +61,9 @@ Ext.extend(modTree.window.CreateItem, MODx.Window, {
         }
         ,
         {
-            xtype: 'datefield',
-            format: 'Y-m-d',
+            xtype: 'xdatetime',
+            dateFormat: 'd.m.Y',
+            timeFormat: 'H:i',
             fieldLabel: _('modtree_item_linkdate'),
             name: 'linkdate',
             id: config.id + '-linkdate',
@@ -138,12 +139,13 @@ Ext.extend(modTree.window.UpdateItem, MODx.Window, {
             allowBlank: false
         },
         {
-            xtype: 'datefield',
-            format: 'Y-m-d', // make it display correct but sends it to server as Y-m-d
-            dateFormat:'Y-m-d',
-            submitFormat: 'U',
-            renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-            altFormats:'U|u|m/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j',
+            xtype: 'xdatetime',
+            //format: 'Y-m-d', // make it display correct but sends it to server as Y-m-d
+            dateFormat: 'd.m.Y',
+            timeFormat: 'H:i',
+            //submitFormat: 'U',
+            //renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+            //altFormats:'U|u|m/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j',
             fieldLabel: _('modtree_item_linkdate'),
             name: 'linkdate',
             id: config.id + '-linkdate',

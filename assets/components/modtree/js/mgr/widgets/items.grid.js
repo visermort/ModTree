@@ -182,7 +182,7 @@ Ext.extend(modTree.grid.Items, MODx.grid.Grid, {
     },
 
     getFields: function () {
-        return ['id', 'master', 'slave', 'linkdate', 'linktitle', 'linktext', 'active', 'actions'];
+        return ['id', 'linkdate', 'linktitle', 'linktext', 'active', 'actions', 'masterPagetitle', 'slavePagetitle'];
     },
 
     getColumns: function () {
@@ -193,19 +193,18 @@ Ext.extend(modTree.grid.Items, MODx.grid.Grid, {
             width: 15
         }, {
             header: _('modtree_item_master'),
-            dataIndex: 'master',
+            dataIndex: 'masterPagetitle',
             sortable: true,
-            width: 120
+            width:  100
         }, {
             header: _('modtree_item_slave'),
-            dataIndex: 'slave',
+            dataIndex: 'slavePagetitle',
             sortable: true,
-            width: 120
+            width: 100
         }
         ,  {
             header: _('modtree_item_linkdate'),
             dataIndex: 'linkdate',
-           // xtype: 'datefield',
             renderer: Ext.util.Format.dateRenderer('d.m.Y H:i'),
             sortable: true,
             width: 70
