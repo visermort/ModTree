@@ -16,7 +16,7 @@ $tplResource = $modx->getOption('tplResource', $scriptProperties, 'tplResource')
 $sortBy = $modx->getOption('sortBy', $scriptProperties, 'pagetitle');
 $sortDir = $modx->getOption('sortDir', $scriptProperties, 'ASC');
 $limit = $modx->getOption('limit', $scriptProperties, 0);
-$linkWay = $modx->getOption('twoWay', $scriptProperties, 0);
+$linkWay = $modx->getOption('linkWay', $scriptProperties, 0);
 $parent = $modx->getOption('parent', $scriptProperties, $modx->resource->get('id'));
 
 

@@ -63,26 +63,31 @@ function getItemChildData(element) {
 
 //при завершении запроса на дочерние ресурсы - создание дочерних узлов
 function makeChildNodes(element, data) {
-    var parent = element.parentElement,
-        ul  = parent.parentElement,
-        ulNew = ul.cloneNode(true),
-        liTemplate = parent.cloneNode(true),
-        content = parent.getElementsByClassName('mod-tree__item-content');
-    ulNew.innerHTML = '';
-    liTemplate.getElementsByClassName('mod-tree__item-title')[0].classList.remove('active');
-    content[0].append(ulNew);
-    data.forEach(function(item, index){
-        //берём родительский li , в цикле вставляем в новый ul, заменяя значения
-        liNew = liTemplate.cloneNode(true);
-        liNew.setAttribute('data-id', item.id);
-        replaceItemData(liNew, item);
-        ulNew.append(liNew);
-        //события на клик
-        liNew.getElementsByClassName('mod-tree__item-icon')[0].onclick = iconClick;
-        liNew.getElementsByClassName('mod-tree__item-title')[0].onclick = titleClick;
-    });
-    element.classList.remove('promised');
-    element.classList.add('open');
+    if (data.length > 0) {
+        var parent = element.parentElement,
+            ul = parent.parentElement,
+            ulNew = ul.cloneNode(true),
+            liTemplate = parent.cloneNode(true),
+            content = parent.getElementsByClassName('mod-tree__item-content');
+        ulNew.innerHTML = '';
+        liTemplate.getElementsByClassName('mod-tree__item-title')[0].classList.remove('active');
+        content[0].append(ulNew);
+        data.forEach(function (item, index) {
+            //берём родительский li , в цикле вставляем в новый ul, заменяя значения
+            liNew = liTemplate.cloneNode(true);
+            liNew.setAttribute('data-id', item.id);
+            replaceItemData(liNew, item);
+            ulNew.append(liNew);
+            //события на клик
+            liNew.getElementsByClassName('mod-tree__item-icon')[0].onclick = iconClick;
+            liNew.getElementsByClassName('mod-tree__item-title')[0].onclick = titleClick;
+        });
+        element.classList.remove('promised');
+        element.classList.add('open');
+    } else {
+        element.classList.remove('promised');
+        element.classList.add('leaf');
+    }
 }
 
 //айакс - запрос - общий
