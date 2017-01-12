@@ -41,8 +41,7 @@ function titleClick(e) {
 //при завершении запроса при клике на титле узла - вывод данных объекта в шаблон
 function showObject(element, data) {
     //получили данные, меняем в шаблоне
-    var contentElement = document.getElementById('mod-tree-content');
-    replaceData(contentElement, data);
+    replaceResourceData(data);
     removeActiveNodes();
     element.classList.add('active');
 }
@@ -75,9 +74,8 @@ function makeChildNodes(element, data) {
     data.forEach(function(item, index){
         //берём родительский li , в цикле вставляем в новый ul, заменяя значения
         liNew = liTemplate.cloneNode(true);
-        //console.log('liNew', liNew);
         liNew.setAttribute('data-id', item.id);
-        replaceData(liNew, item);
+        replaceItemData(liNew, item);
         ulNew.append(liNew);
         //события на клик
         liNew.getElementsByClassName('mod-tree__item-icon')[0].onclick = iconClick;
@@ -179,40 +177,37 @@ function getParents(element, level) {
     return parent;
 }
 
-//замена данных в шаблоне
-function replaceData(element, data) {
+//замена данных в элементе дерева
+function replaceItemData(element, data){
     if (element != null && element.nodeType == 1) {
         //если тип - элемент, делаем замену содержимого или для каждого дочернего  вызываем снова себя
         dataName = element.getAttribute('data-name');
         if (dataName != null) {
-            if (dataName.substring(0, 3) == 'uri') {
-                //обрабатываем ссылки - особый случай
-                if (data[dataName]) {
-                    a = element.getElementsByTagName('a')[0];
-                    a.setAttribute('href', data[dataName]);
-                    a.innerHTML = data[dataName];
-                } else {
-                    element.innerHTML = data[dataName];
-                }
+            element.innerHTML = data[dataName];
+        }
 
-            } else if ((dataName.substring(0, 5) == 'image')){
-                //oбрабатываем image - особый случай
-                if (data[dataName]) {
-                    a = element.getElementsByTagName('img')[0];
-                    if (a != null) {
-                        a.setAttribute('src', data[dataName]);
-                    }
-                } else {
-                    element.innerHTML = data[dataName];
-                }
+        for (var i = 0; i < element.childNodes.length; i++) {
+            replaceItemData(element.childNodes[i], data);
+        }
+
+    }
+}
+
+//замена данных в шаблоне ресурса
+function replaceResourceData(data) {
+
+    for (var key in data) {
+        element = document.getElementById('modtree-'+key);
+        if (element != null) {
+            if (key.substring(0, 3) == 'uri') {
+                //обрабатываем ссылки - особый случай
+                element.setAttribute('href', data[key]);
+            } else if ((key.substring(0, 5) == 'image')) {
+                element.setAttribute('src', data[key]);
             } else {
-                //для остального просто вставляем содержимое
-                element.innerHTML = data[dataName];
-            }
-        } else {
-            for (var i = 0; i < element.childNodes.length; i++) {
-                replaceData(element.childNodes[i], data);
+                element.innerHTML = data[key];
             }
         }
     }
+
 }

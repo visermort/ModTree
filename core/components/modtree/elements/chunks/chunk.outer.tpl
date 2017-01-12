@@ -9,24 +9,22 @@
             data-sortdir="[[+sortDir]]"
         >[[+items]]</ul>`]]
     </div>
-    <div class="mod-tree__content "  id="mod-tree-content">
-        <h4 class="mod-tree__content-header">
-            <span data-name="pagetitle"></span>
-        </h4>
+    <div class="mod-tree__content "  >
+        <h4 id="modtree-pagetitle" class="mod-tree__content-header"> </h4>
         <div class="mod-tree__content-description">
-            <span data-name="publishedon"></span>
-            <span data-name="introtext"></span>
+            <div class="mod-tree__content-publishedon" id="modtree-publishedon"></div>
+            <div class="mod-tree__content-introtext" id="modtree-intotext"></div>
         </div>
 
-        <div class="mod-tree__content-content">
+        <div class="mod-tree__content-contenttext">
             <div class="mod-tree__content-text">
-                <span data-name="content"></span>
+                <div class="mod-tree__content-content" id="modtree-content"></div>
             </div>
-            <div class="mod-tree__content-image">
-                <span data-name="image"><img src="" ></span>
+            <div class="mod-tree__content-image" >
+                <img id="modtree-image" src="" >
             </div>
         </div>
-        <div class="mod-tree__content-uri"><span data-name="uri"><a href=""></a></span></div>
+        <div class="mod-tree__content-uri"><a id="modtree-uri" href=""><span id="modtree-urltext"></span></a></div>
     </div>
 </div>
 

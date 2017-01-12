@@ -28,7 +28,7 @@ $_lang['modtree_item_active'] = 'Включено';
 
 $_lang['modtree_item_err_name'] = 'Вы должны указать имя Связи.';
 $_lang['modtree_item_err_ae'] = 'Связь с таким именем уже существует.';
-$_lang['modtree_item_err_nf'] = 'Связь не найден.';
+$_lang['modtree_item_err_nf'] = 'Связь не найдена.';
 $_lang['modtree_item_err_ns'] = 'Связь не указана.';
 $_lang['modtree_item_err_remove'] = 'Ошибка при удалении Связи.';
 $_lang['modtree_item_err_save'] = 'Ошибка при сохранении Связи.';

@@ -17,6 +17,10 @@ class modTreeTreeGetListProcessor extends modProcessor
         $linkWay = $this->getProperty('linkWay');
 
         // Build query
+        /*select * from modx_site_content mr inner join modx_modtree_items mt on mr.id = mt.master where slave = 1
+            union select * from modx_site_content mr inner join modx_modtree_items mt on mr.id = mt.slave where master = 1
+        */
+
         $resMaster=[];
         $resSlave=[];
         if ($linkWay >= 0) {
@@ -56,7 +60,6 @@ class modTreeTreeGetListProcessor extends modProcessor
         }
 
         return $this->success('',$resMaster);
-        // return $resMaster;
 
     }
 
