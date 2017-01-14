@@ -9,18 +9,23 @@ $tmp = array(
         'file' => 'item',
         'description' => '',
     ),
-//    'tpl.modTree.subItem' => array(
-//        'file' => 'subItem',
-//        'description' => '',
-//    ),
+
     'tpl.modTree.outer' => array(
         'file' => 'outer',
         'description' => '',
     ),
-//    'tpl.modTree.resource' => array(
-//        'file' => 'resource',
-//        'description' => '',
-//    ),
+    'tpl.modTree.outerSearch' => array(
+        'file' => 'outerSearch',
+        'description' => '',
+    ),
+    'tpl.modTree.itemSeach' => array(
+        'file' => 'itemSeach',
+        'description' => '',
+    ),
+    'tpl.modTree.itemSearchField' => array(
+        'file' => 'itemSearchField',
+        'description' => '',
+    ),    
     );
 
 // Save chunks for setup options

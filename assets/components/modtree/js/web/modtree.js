@@ -9,6 +9,12 @@ Array.from(document.getElementsByClassName("mod-tree__item-title")).forEach(
         element.onclick = titleClick;
     }
 );
+var button = document.getElementById('mod-tree_seach-button');
+    if (button !=null ) {
+        button.onclick  = searchResources;
+    }
+
+
 
 //при открытии - закрытии узла
 function iconClick(e) {
@@ -30,7 +36,7 @@ function titleClick(e) {
         parent = element.parentElement,
         ul  = parent.parentElement,
         url = ul.getAttribute('data-url'),
-        data = 'id='+parent.getAttribute('data-id'),
+        data = 'id='+parent.getAttribute('data-id')+'&cts=web',
         action = 'web/resource/get';
 
     //приготовили данные и сделали запрос, при завершении функция
@@ -55,7 +61,8 @@ function getItemChildData(element) {
             '&limit='+ul.getAttribute('data-limit')+
             '&sortBy='+ul.getAttribute('data-sortby')+
             '&sortDir='+ul.getAttribute('data-sortDir')+
-            '&linkWay='+ul.getAttribute('data-linkWay'),
+            '&linkWay='+ul.getAttribute('data-linkWay')+
+            '&cts=web',
         action = 'web/tree/getlist';
     //приготовили данные и сделали запрос, при завершении функция
     httpRequest(element, url, action, data, makeChildNodes);
@@ -63,7 +70,8 @@ function getItemChildData(element) {
 
 //при завершении запроса на дочерние ресурсы - создание дочерних узлов
 function makeChildNodes(element, data) {
-    if (data.length > 0) {
+    console.log(data);
+    if (data.items.length > 0) {
         var parent = element.parentElement,
             ul = parent.parentElement,
             ulNew = ul.cloneNode(true),
@@ -72,7 +80,7 @@ function makeChildNodes(element, data) {
         ulNew.innerHTML = '';
         liTemplate.getElementsByClassName('mod-tree__item-title')[0].classList.remove('active');
         content[0].append(ulNew);
-        data.forEach(function (item, index) {
+        data.items.forEach(function (item, index) {
             //берём родительский li , в цикле вставляем в новый ul, заменяя значения
             liNew = liTemplate.cloneNode(true);
             liNew.setAttribute('data-id', item.id);
@@ -88,6 +96,45 @@ function makeChildNodes(element, data) {
         element.classList.remove('promised');
         element.classList.add('leaf');
     }
+}
+
+//нажатие на "Поиск"
+function searchResources(e) {
+    var button = e.target,
+        parent = button.parentElement,
+        fields = parent.getElementsByClassName('mod-tree__search-fields-item-field'),
+    //console.log(button, fields);
+        params = [];
+    Array.from(fields).forEach(function(field, key) {
+        name = field.getAttribute('name');
+        value = field.value;
+        console.log(name, value);
+        if (value != "") {
+            params.push({ name: name, value: value});
+        }
+    });
+    console.log(params);
+    console.log(JSON.stringify(params));
+   // console.log(params.toJSON());
+    //if (params.length > 0) {
+        var data = '&limit='+parent.getAttribute('data-limit')+
+                '&sortBy='+parent.getAttribute('data-sortby')+
+                '&sortDir='+parent.getAttribute('data-sortDir')+
+                '&linkWay='+parent.getAttribute('data-linkWay')+
+                '&searchParams='+JSON.stringify(params)+
+                '&cts=web',
+            url = parent.getAttribute('data-url'),
+            action = 'web/resource/getlist';
+        console.log(data, url, action);
+        //делаем запрос
+        httpRequest(button, url, action, data, makeSearchList);
+   // }
+    
+}
+//после поиска, отображение результатов
+function makeSearchList(element, data) {
+    console.log(data);
+
 }
 
 //айакс - запрос - общий

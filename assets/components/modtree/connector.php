@@ -28,7 +28,7 @@ $modx->getRequest();
 $request = $modx->request;
 
 $action = $_SERVER['HTTP_ACTION'];
-if (in_array($action, ['web/tree/getlist', 'web/resource/get'])) {
+if (in_array($action, ['web/tree/getlist', 'web/resource/get', 'web/resource/getlist'])) {
     $result = $modx->runProcessor($action, $_POST, [
         'processors_path' => $path,
     ]);

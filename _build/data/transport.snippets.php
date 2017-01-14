@@ -9,7 +9,10 @@ $tmp = array(
         'file' => 'modtree',
         'description' => '',
     ),
-);
+    'modTreeSearch' => array(
+        'file' => 'modtreeSearch',
+        'description' => '',
+    ),);
 
 foreach ($tmp as $k => $v) {
     /** @var modSnippet $snippet */

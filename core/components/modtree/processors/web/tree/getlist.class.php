@@ -16,76 +16,71 @@ class modTreeTreeGetListProcessor extends modProcessor
         $sortBy = $this->getProperty('sortBy');
         $sortDir = $this->getProperty('sortDir');
         $linkWay = $this->getProperty('linkWay');
+        $page = ($this->getProperty('page'))? $this->getProperty('page') : 1;
 
-        // Build query
-        /*select mr.*,mt.linkdate,mt.linktitle,mt.linktext from `modx_site_content` mr inner join `modx_modtree_items` mt on mr.`id` = mt.`slave`
-         where `master` = 1 union select mr.*,mt.linkdate,mt.linktitle,mt.linktext from `modx_site_content` mr inner join `modx_modtree_items` mt
-        on mr.`id` = mt.`master`  where `slave` = 1 */
+        //$page = 2;
+        //$limit = 2;
+
+        $offset = ($limit == 0 || $page < 2)? 0 : $limit * ($page - 1);
+        // Build queryes
 
         $resources = $this->modx->getTableName('modResource');
         $treeItems = $this->modx->getTableName('modTreeItem');
         if ($linkWay > 0) {
+            $sqlCount = 'select mr.id from ' . $resources . ' mr INNER JOIN ' .
+                $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where `master` = :id ';
             $sql = 'SELECT mr.*,mt.linkdate,mt.linktitle,mt.linktext FROM ' . $resources . ' mr INNER JOIN ' .
                 $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where `master` = :id ';
         } elseif ($linkWay < 0 ) {
+            $sqlCount = 'select mr.id from ' .  $resources . ' mr inner join ' .
+                $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where `slave` = :id ';
             $sql = 'select mr.*,mt.linkdate,mt.linktitle,mt.linktext from ' . $resources . ' mr inner join ' .
                 $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where `slave` = :id ';
         } else {
+            $sqlCount = 'select mr.id from ' . $resources . ' mr inner join ' .
+                $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where `master` = :id union'.
+                ' select mr.id from ' .
+                $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where `slave` = :id ';
             $sql = 'select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' . $resources . ' mr inner join ' .
                 $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where `master` = :id union'.
                 ' select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' .
                 $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where `slave` = :id ';
         }
+        $sqlCount = 'select count(*) from (' . $sqlCount . ') as tt';
+
+        //doto published deleted
         $sql .= 'order by `' . $sortBy .'` ' .$sortDir;
         if ($limit) {
-            $sql .= ' limit '.$limit;
+            $sql .= ' limit '.$offset.','.$limit;
         }
 
+        $queryCount = $this->modx->prepare($sqlCount);
+        $queryCount->bindParam(':id', $id);
+        $queryCount->execute();
+        $count = (int) $queryCount->fetchColumn();
+        $pages = ($limit == 0) ? 0 : ceil($count/$limit);
 
-        $query =  new xPDOCriteria($this->modx, $sql, [':id' => $id]);
-        $query->stmt->execute();
-        $resMaster = $query->stmt->fetchAll(PDO::FETCH_ASSOC);
+        //$query =  new xPDOCriteria($this->modx, $sql, [':id' => $id]);
+        $query = $this->modx->prepare($sql);
+        $query->bindParam(':id', $id);
+        $query->execute();
 
+        $resMaster = $query->fetchAll(PDO::FETCH_ASSOC);
 
-//        $resMaster=[];
-//        $resSlave=[];
-//        if ($linkWay >= 0) {
-//            $q = $this->modx->newQuery('modTreeItem');
-//            $q->innerJoin('modResource', 'ResourceSlave');
-//            $q->select(['ResourceSlave.*']);
-//            $q->select(['modTreeItem.linkdate', 'modTreeItem.linktitle', 'modTreeItem.linktext']);
-//
-//            $q->where([
-//                'master' => $id,
-//                'active' => 1,
-//                'ResourceSlave.published' => 1,
-//            ]);
-//            $q->prepare();
-//            $q->stmt->execute();
-//            $resMaster = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
-//        }
-//
-//        if ($linkWay<=0) {
-//            $q = $this->modx->newQuery('modTreeItem');
-//            $q->innerJoin('modResource', 'ResourceMaster');
-//            $q->select(['ResourceMaster.*']);
-//            $q->select(['modTreeItem.linkdate', 'modTreeItem.linktitle', 'modTreeItem.linktext']);
-//
-//            $q->where([
-//                'slave' => $id,
-//                'active' => 1,
-//                'ResourceMaster.published' => 1,
-//            ]);
-//            $q->prepare();
-//            $q->stmt->execute();
-//            $resSlave = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
-//        }
-//        $resMaster = array_merge($resMaster, $resSlave);
         for ($i = 0; $i < count($resMaster); $i++){
             $this->formatDates($resMaster[$i]);
         }
 
-        return $this->success('',$resMaster);
+        return $this->success('',[
+            'pagination' => [
+                'count' => $count,
+                'limit' => $limit,
+                'page' => $page,
+                'pages' => $pages,
+                'offset' => $offset,
+            ],
+            'items' => $resMaster,
+        ]);
 
     }
 

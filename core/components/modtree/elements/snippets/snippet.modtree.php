@@ -32,7 +32,7 @@ $result = $modx->runProcessor('web/tree/getlist', [
         'processors_path' => $modx->getOption('modtree_core_path').'processors/',
     ]);
 
-$resMaster = $result->response['object'];
+$resMaster = $result->response['object']['items'];
 //return print_r($resMaster['object']);
 
 //Output

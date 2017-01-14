@@ -3,6 +3,11 @@
 class modTreeResourceGetProcessor extends  modProcessor
 {
 
+    public function checkPermissions()
+    {
+        return true;
+    }
+
     public function process()
     {
         $id = $this->getProperty('id');
