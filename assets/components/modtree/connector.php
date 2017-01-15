@@ -29,15 +29,28 @@ $request = $modx->request;
 
 $action = $_SERVER['HTTP_ACTION'];
 if (in_array($action, ['web/tree/getlist', 'web/resource/get', 'web/resource/getlist'])) {
-    $result = $modx->runProcessor($action, $_POST, [
-        'processors_path' => $path,
-    ]);
-    //exit(json_encode($result->response));
-    if (!$result->isError()) {
-        exit(json_encode($result->response));
+    $version = $modx->getVersionData();
+    if (version_compare($version['full_version'], '2.1.1-pl') >= 0) {
+        if ($modx->user->hasSessionContext($modx->context->get('key'))) {
+       // if (true) {
+            $_SERVER['HTTP_MODAUTH'] = $_SESSION["modx.{$modx->context->get('key')}.user.token"];
+        } else {
+            $_SESSION["modx.{$modx->context->get('key')}.user.token"] = 0;
+            $_SERVER['HTTP_MODAUTH'] = 0;
+        }
     } else {
-        exit(json_encode(['error' => $result->getMessage() ]));
+        $_SERVER['HTTP_MODAUTH'] = $modx->site_id;
     }
+    $_REQUEST['HTTP_MODAUTH'] = $_SERVER['HTTP_MODAUTH'];
+//    $result = $modx->runProcessor($action, $_POST, [
+//        'processors_path' => $path,
+//    ]);
+//    //exit(json_encode($result->response));
+//    if (!$result->isError()) {
+//        exit(json_encode($result->response));
+//    } else {
+//        exit(json_encode(['error' => $result->getMessage() ]));
+//    }
 }
 //if ($action == 'web/resource/get') {
 ////    $response = $modx->runProcessor('resource/get', $_POST);

@@ -36,7 +36,9 @@ function titleClick(e) {
         parent = element.parentElement,
         ul  = parent.parentElement,
         url = ul.getAttribute('data-url'),
-        data = 'id='+parent.getAttribute('data-id')+'&cts=web',
+        data = 'id='+parent.getAttribute('data-id')+
+            '&cts=web'+
+            '&action=web/resource/get',
         action = 'web/resource/get';
 
     //приготовили данные и сделали запрос, при завершении функция
@@ -62,7 +64,8 @@ function getItemChildData(element) {
             '&sortBy='+ul.getAttribute('data-sortby')+
             '&sortDir='+ul.getAttribute('data-sortDir')+
             '&linkWay='+ul.getAttribute('data-linkWay')+
-            '&cts=web',
+            '&cts=web'+
+            '&action=web/tree/getlist',
         action = 'web/tree/getlist';
     //приготовили данные и сделали запрос, при завершении функция
     httpRequest(element, url, action, data, makeChildNodes);
@@ -122,7 +125,8 @@ function searchResources(e) {
                 '&sortDir='+parent.getAttribute('data-sortDir')+
                 '&linkWay='+parent.getAttribute('data-linkWay')+
                 '&searchParams='+JSON.stringify(params)+
-                '&cts=web',
+                '&cts=web'+
+                '&action=web/resource/getlist',
             url = parent.getAttribute('data-url'),
             action = 'web/resource/getlist';
         console.log(data, url, action);

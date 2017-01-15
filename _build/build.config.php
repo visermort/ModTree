@@ -48,6 +48,7 @@ define('BUILD_PLUGIN_STATIC', false);
 $BUILD_RESOLVERS = array(
     'tables',
     'chunks',
+    'resource',
     //'setup',
    // 'office',
 );
