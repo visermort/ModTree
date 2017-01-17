@@ -8,17 +8,18 @@
 //    return 'Could not load modTree class!';
 //}
 
-$tpl = $modx->getOption('tpl', $scriptProperties, 'tpl');
-$tplSearch = $modx->getOption('tplSearch', $scriptProperties, 'tplItemSearch');
-$tplSearchField = $modx->getOption('tplSearchField', $scriptProperties, 'tplItemSearchField');
-$tplOuter = $modx->getOption('tplOuter', $scriptProperties, 'tplOuterSearch');
+$tplList = $modx->getOption('tplList', $scriptProperties, 'tpl.ModTree.itemList');
+$tplTree = $modx->getOption('tplTree', $scriptProperties, 'ModTree.itemTree');
+$tplSearchField = $modx->getOption('tplSearchField', $scriptProperties, 'tpl.ModTree.itemSearchField');
+$tplOuter = $modx->getOption('tplOuter', $scriptProperties, 'tpl.ModTree.outer');
 
 $sortBy = $modx->getOption('sortBy', $scriptProperties, 'menuindex');
 $sortDir = $modx->getOption('sortDir', $scriptProperties, 'ASC');
 $limit = $modx->getOption('limit', $scriptProperties, 0);
-$searchLimit = $modx->getOption('searchLimit', $scriptProperties, 15);
+$limitList = $modx->getOption('limitList', $scriptProperties, 15);
 $parent = $modx->getOption('parent', $scriptProperties, '');
-$linkWay = $modx->getOption('parent', $scriptProperties, 0);
+$linkWay = $modx->getOption('linkWay', $scriptProperties, 0);
+$paginateList = $modx->getOption('paginateList', $scriptProperties, 0);
 
 $searchFields = explode(',', $modx->getOption('searchFields', $scriptProperties, 'padetitle, content'));
 
@@ -48,23 +49,26 @@ foreach ($searchFields as $searchField) {
     ]);
 
 }
-//search result
+//search result - на будущее, если нужен изначальный список
 $items = '';
 foreach ($resMaster as $item) {
-    $items .= $modx->getChunk($tplSearch, $item);
+    $items .= $modx->getChunk($tplList, $item);
 }
 
-$itemHidden = $modx->getChunk($tpl, []);
+$itemHiddenList = $modx->getChunk($tplList, []);
+$itemHiddenTree = $modx->getChunk($tplTree, []);
 
 return $modx->getChunk($tplOuter, [
-    'itemhidden' => $itemHidden,
+    'itemHiddenList' => $itemHiddenList,
+    'itemHiddenTree' => $itemHiddenTree,
     'searchfields' => $itemsSearch,
     'items' => $items,
     'sortBy' => $sortBy,
     'sortDir' => $sortDir,
     'limit' => $limit,
-    'searchLimit' => $searchLimit,
+    'limitList' => $limitList,
+    'countResult' => 0,
+    'paginateList' => $paginateList,
     'linkWay' => $linkWay,
     'button-label' => 'Поиск',
-    'connector' => $modx->getOption('modtree_assets_urs').'connector.php',
 ]);

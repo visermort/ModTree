@@ -1,4 +1,4 @@
-<li class="mod-tree__item" data-id="[[+id]]">
+<li class="mod-tree__item mod-tree__item-tree" data-id="[[+id]]">
     <div class="mod-tree__item-icon promised"></div>
     <div class="mod-tree__item-title" >
         <span data-name="pagetitle">[[+pagetitle]] </span>

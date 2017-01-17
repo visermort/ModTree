@@ -12,7 +12,12 @@ $tmp = array(
     'modTreeSearch' => array(
         'file' => 'modtreeSearch',
         'description' => '',
-    ),);
+    ),
+    'modTreeAjax' => array(
+        'file' => 'modtreeAjax',
+        'description' => '',
+    ),
+);
 
 foreach ($tmp as $k => $v) {
     /** @var modSnippet $snippet */

@@ -1,4 +1,7 @@
 
+.hidden {
+    display: none;
+}
 /*clearfix*/
 .clearfix:before, .clearfix:after {
     content: " ";
@@ -41,7 +44,7 @@
     border: 1px solid #137899;
 }
 .mod-tree__list {
-    padding: 0;
+    padding: 0 10px 0 0 ;
 }
 .mod-tree__item-icon {
     float:left;
@@ -83,6 +86,58 @@
 .mod-tree__item.open > .mod-tree__item-content {
     height: auto;
 }
+
+/*new*/
+
+.mod-tree__panel {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    min-height: 120px;
+    margin-bottom: 15px;
+
+}
+.mod-tree__search-fields-group {
+    width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+.mod-tree__seach-fields {
+    padding: 0;
+}
+.mod-tree__search-fields-item {
+    list-style-type: none;
+    /*padding: 0;*/
+}
+.mod-tree_seach-buttons {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.mod-tree_seach-button {
+    width: 100px;
+    padding: 5px;
+}
+
+.mod-tree__search-fields-item-field {
+    width: 100%;
+    height: 25px;
+}
+.mod-tree__paginate {
+    margin: 10px;
+}
+.mod-tree__paginate-button {
+    width: 30px;
+    height: 20px;
+    cursor:pointer;
+}
+
+.mod-tree__search-result {
+    margin: 0 10px 10px 10px;
+    /*text-align: center;*/
+    font-size: 14px;
+}
+/*new*/
 
 @media (max-width: 767px) {
 

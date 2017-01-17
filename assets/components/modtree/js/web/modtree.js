@@ -9,12 +9,15 @@ Array.from(document.getElementsByClassName("mod-tree__item-title")).forEach(
         element.onclick = titleClick;
     }
 );
-var button = document.getElementById('mod-tree_seach-button');
-    if (button !=null ) {
-        button.onclick  = searchResources;
+// var button = document.getElementById('mod-tree_seach-button');
+//     if (button !=null ) {
+//         button.onclick  = searchResources;
+//     }
+Array.from(document.getElementsByClassName("mod-tree_seach-button")).forEach(
+    function(element, index, array) {
+        element.onclick = searchResources;
     }
-
-
+);
 
 //при открытии - закрытии узла
 function iconClick(e) {
@@ -35,7 +38,8 @@ function titleClick(e) {
     var element = getParentTargetElement(e.target, 'mod-tree__item-title'),
         parent = element.parentElement,
         ul  = parent.parentElement,
-        url = ul.getAttribute('data-url'),
+        //url = ul.getAttribute('data-url'),
+        url = 'modtreeajax.php',
         data = 'id='+parent.getAttribute('data-id')+
             '&cts=web'+
             '&action=web/resource/get',
@@ -58,7 +62,8 @@ function showObject(element, data) {
 function getItemChildData(element) {
     var parent = element.parentElement,
         ul  = parent.parentElement,
-        url = ul.getAttribute('data-url'),
+//        url = ul.getAttribute('data-url'),
+        url = 'modtreeajax.php',
         data = 'id='+parent.getAttribute('data-id')+
             '&limit='+ul.getAttribute('data-limit')+
             '&sortBy='+ul.getAttribute('data-sortby')+
@@ -75,10 +80,13 @@ function getItemChildData(element) {
 function makeChildNodes(element, data) {
     console.log(data);
     if (data.items.length > 0) {
-        var parent = element.parentElement,
+        var tree = getParentTargetElement(element, 'mod-tree__tree'),
+            hidden = document.getElementsByClassName('mod-tree__tree-templates')[0],
+            parent = element.parentElement,
             ul = parent.parentElement,
             ulNew = ul.cloneNode(true),
-            liTemplate = parent.cloneNode(true),
+            liTemplate = hidden.getElementsByClassName('mod-tree__item-tree')[0],//.cloneNode(true),
+            //liTemplate = parent.cloneNode(true),
             content = parent.getElementsByClassName('mod-tree__item-content');
         ulNew.innerHTML = '';
         liTemplate.getElementsByClassName('mod-tree__item-title')[0].classList.remove('active');
@@ -101,13 +109,13 @@ function makeChildNodes(element, data) {
     }
 }
 
-//нажатие на "Поиск"
+//нажатие на "Поиск" и на конопки пагинации
 function searchResources(e) {
     var button = e.target,
-        parent = button.parentElement,
-        fields = parent.getElementsByClassName('mod-tree__search-fields-item-field'),
-    //console.log(button, fields);
+        fieldsDiv = getParentTargetElement(button, 'mod-tree__tree').getElementsByClassName('mod-tree__seach')[0],
+        fields = fieldsDiv.getElementsByClassName('mod-tree__search-fields-item-field'),
         params = [];
+    console.log(fieldsDiv, fields);
     Array.from(fields).forEach(function(field, key) {
         name = field.getAttribute('name');
         value = field.value;
@@ -116,30 +124,77 @@ function searchResources(e) {
             params.push({ name: name, value: value});
         }
     });
-    console.log(params);
-    console.log(JSON.stringify(params));
+    //console.log(params);
+    //console.log(JSON.stringify(params));
    // console.log(params.toJSON());
-    //if (params.length > 0) {
-        var data = '&limit='+parent.getAttribute('data-limit')+
-                '&sortBy='+parent.getAttribute('data-sortby')+
-                '&sortDir='+parent.getAttribute('data-sortDir')+
-                '&linkWay='+parent.getAttribute('data-linkWay')+
+        var data = '&limit='+fieldsDiv.getAttribute('data-limit')+
+                '&sortBy='+fieldsDiv.getAttribute('data-sortby')+
+                '&sortDir='+fieldsDiv.getAttribute('data-sortDir')+
+                '&linkWay='+fieldsDiv.getAttribute('data-linkWay')+
                 '&searchParams='+JSON.stringify(params)+
-                '&cts=web'+
-                '&action=web/resource/getlist',
-            url = parent.getAttribute('data-url'),
+                 '&action=web/resource/getlist'+
+                '&paginateList='+fieldsDiv.getAttribute('data-paginate-list')+
+                '&page='+button.getAttribute('data-page'),
+            url = 'modtreeajax.php',
             action = 'web/resource/getlist';
         console.log(data, url, action);
         //делаем запрос
         httpRequest(button, url, action, data, makeSearchList);
-   // }
-    
 }
+
 //после поиска, отображение результатов
 function makeSearchList(element, data) {
     console.log(data);
+    var tree = getParentTargetElement(element, 'mod-tree__tree'),
+        hidden = document.getElementsByClassName('mod-tree__tree-templates')[0],
+        liTemplate = hidden.getElementsByClassName('mod-tree__item-list')[0].cloneNode(true),
+        ul = tree.getElementsByClassName('mod-tree__list')[0],
+        paginate = tree.getElementsByClassName('mod-tree__paginate')[0],
+        searchResult = tree.getElementsByClassName('mod-tree__search-result')[0];
+    console.log(element, liTemplate, ul);
+    ul.innerHTML = '';
+    paginate.innerHTML = '';
+    if (data.items.length > 0) {
+        ul.classList.remove('hidden');
+        data.items.forEach(function (item, index) {
+            //берём родительский li , в цикле вставляем в новый ul, заменяя значения
+            var liNew = liTemplate.cloneNode(true);
+            liNew.setAttribute('data-id', item.id);
+            replaceItemData(liNew, item);
+            ul.append(liNew);
+            //события на клик
+            liNew.getElementsByClassName('mod-tree__item-icon')[0].onclick = iconClick;
+            liNew.getElementsByClassName('mod-tree__item-title')[0].onclick = titleClick;
+        });
+        console.log('buttons');
+        if (data.pagination.buttons != null && data.pagination.buttons.length > 1) {
+            data.pagination.buttons.forEach(function(item, index){
+                console.log('button',item);
+                var button = tree.getElementsByClassName('mod-tree__paginate-button-template')[0].cloneNode(true);
+                button.classList.remove('mod-tree__paginate-button-template');
+                button.classList.remove('hidden');
+                button.innerHTML = item.page;
+                button.setAttribute('data-page', item.page);
+                if (item.current == true) {
+                    button.classList.add('current');
+                    //button.setAttribute('disabled', true);
+                    button.disabled = true;
+                } else {
+                    button.onclick = searchResources;    
+                }
+                paginate.append(button);
+            });
+            paginate.classList.remove('hidden');
+        }
+        makeSeachResult(searchResult, data.pagination);
 
+    } else {
+        ul.classList.add('hidden');
+        paginate.classList.add('hidden');
+        searchResult.classList.add('hidden');
+    }
 }
+
 
 //айакс - запрос - общий
 function httpRequest(element, url, action, data, onLoad){
@@ -157,7 +212,7 @@ function httpRequest(element, url, action, data, onLoad){
     xhr.onload = xhr.onerror = function () {
         preloader.style.display = 'none';
         var response = xhr.response;
-        //console.log(response);
+        console.log(response);
         if (response.object != null) {
             //получили данные, вызываем функцию
             onLoad(element, response.object);
@@ -266,4 +321,15 @@ function replaceResourceData(data) {
         }
     }
 
+}
+
+//текстовое отображение результатов поиска
+function makeSeachResult(element, data)
+{
+    if (data.limit==0 || data.searchResult == 0){
+        element.classList.add('hidden');
+    } else {
+        replaceItemData(element, data);
+        element.classList.remove('hidden');
+    }
 }

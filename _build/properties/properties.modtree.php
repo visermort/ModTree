@@ -3,14 +3,14 @@
 $properties = array();
 
 $tmp = array(
-    'tpl' => array(
+    'tplList' => array(
         'type' => 'textfield',
-        'value' => 'tpl.modTree.item',
+        'value' => 'tpl.modTree.itemTree',
     ),
-//    'tplSubitem' => array(
-//        'type' => 'textfield',
-//        'value' => 'tpl.modTree.subItem',
-//    ),
+    'tplTree' => array(
+        'type' => 'textfield',
+        'value' => 'tpl.modTree.itemTree',
+    ),
     'tplOuter' => array(
         'type' => 'textfield',
         'value' => 'tpl.modTree.outer',
@@ -34,6 +34,10 @@ $tmp = array(
     'limit' => array(
         'type' => 'numberfield',
         'value' => 0,
+    ),
+    'limitList' => array(
+        'type' => 'numberfield',
+        'value' => 15,
     ),
     'linkWay' => array(
         'type' => 'numberfield',

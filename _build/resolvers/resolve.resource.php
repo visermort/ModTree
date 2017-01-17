@@ -12,7 +12,7 @@ $resource->set('uri_override', 1);
 $resource->set('published', 1);
 $resource->set('isfolder', 0);
 $resource->set('pagetitle', 'modtree_resource');
-//$resource->set('hidemenu', 1);
+$resource->set('hidemenu', 1);
 $resource->set('template', 0);
 $resource->setContent('[[!modTreeAjax]]');
 $resource->save();

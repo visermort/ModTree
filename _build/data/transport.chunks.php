@@ -5,23 +5,23 @@
 $chunks = array();
 
 $tmp = array(
-    'tpl.modTree.item' => array(
-        'file' => 'item',
+    'tpl.modTree.itemList' => array(
+        'file' => 'itemList',
         'description' => '',
     ),
-
+    'tpl.modTree.itemTree' => array(
+        'file' => 'itemTree',
+        'description' => '',
+    ),
     'tpl.modTree.outer' => array(
         'file' => 'outer',
         'description' => '',
     ),
-    'tpl.modTree.outerSearch' => array(
-        'file' => 'outerSearch',
-        'description' => '',
-    ),
-    'tpl.modTree.itemSeach' => array(
-        'file' => 'itemSeach',
-        'description' => '',
-    ),
+//    'tpl.modTree.outerSearch' => array(
+//        'file' => 'outerSearch',
+//        'description' => '',
+//    ),
+
     'tpl.modTree.itemSearchField' => array(
         'file' => 'itemSearchField',
         'description' => '',

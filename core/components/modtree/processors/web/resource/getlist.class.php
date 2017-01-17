@@ -17,6 +17,7 @@ class modTreeResourceGetProcessor extends  modProcessor
         $sortDir = $this->getProperty('sortDir');
         $page = ($this->getProperty('page'))? $this->getProperty('page') : 1;
         $searchParams = json_decode($this->getProperty('searchParams'));
+        $paginateList = $this->getProperty('paginateList');
 
         //$page = 2;
         //$limit = 2;
@@ -62,10 +63,12 @@ class modTreeResourceGetProcessor extends  modProcessor
         return $this->success('',[
             'pagination' => [
                 'count' => $count,
+                'countResult' => count($resMaster),
                 'limit' => $limit,
                 'page' => $page,
                 'pages' => $pages,
                 'offset' => $offset,
+                'buttons' => $this->makePaginate($page, $pages, $paginateList),
                 'searchParams' => $searchParams,
                 'queryText' => $queryText,
             ],
@@ -92,6 +95,29 @@ class modTreeResourceGetProcessor extends  modProcessor
         } else {
             $resourceArray['publishedon'] = '';
         }
+    }
+
+    private function makePaginate($page, $pages, $paginateList)
+    {
+        if ($pages < 2) {
+            return;
+        }
+        $buttons = [];
+ //       if ($paginateList) {
+        if (true){
+            //кнопки в виде списка
+            for($i = 0; $i < $pages; $i++) {
+                $buttons[] = [
+                    'page' => $i+1,
+                    'current' => $i+1 == $page,
+                ];
+            }
+        } else {
+            //4 кнопки
+
+        }
+        return $buttons;
+
     }
 
 }

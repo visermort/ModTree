@@ -3,13 +3,13 @@
 $properties = array();
 
 $tmp = array(
-    'tpl' => array(
+    'tplList' => array(
         'type' => 'textfield',
-        'value' => 'tpl.modTree.item',
+        'value' => 'tpl.modTree.itemList',
     ),
-    'tplSearch' => array(
+    'tplTree' => array(
         'type' => 'textfield',
-        'value' => 'tpl.modTree.itemSearch',
+        'value' => 'tpl.modTree.itemTree',
     ),
     'tplSearchField' => array(
         'type' => 'textfield',
@@ -17,7 +17,7 @@ $tmp = array(
     ),
     'tplOuter' => array(
         'type' => 'textfield',
-        'value' => 'tpl.modTree.outerSearch',
+        'value' => 'tpl.modTree.outer',
     ),
     'sortBy' => array(
         'type' => 'textfield',
@@ -35,7 +35,7 @@ $tmp = array(
         'type' => 'numberfield',
         'value' => 0,
     ),
-    'searchLimit' => array(
+    'limitList' => array(
         'type' => 'numberfield',
         'value' => 15,
     ),
@@ -44,6 +44,10 @@ $tmp = array(
         'value' => 'pagetitle,content',
     ),
     'linkWay' => array(
+        'type' => 'numberfield',
+        'value' => 0,
+    ),
+    'paginateList' => array(
         'type' => 'numberfield',
         'value' => 0,
     ),
