@@ -1,0 +1,1 @@
+<button  data-page="[[+page]]" class="mod-tree__paginate-button [[+current:is=`1`:then=`current" disabled `:else=`"`]]>[[+page]]</button>

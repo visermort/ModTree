@@ -17,11 +17,10 @@ $tmp = array(
         'file' => 'outer',
         'description' => '',
     ),
-//    'tpl.modTree.outerSearch' => array(
-//        'file' => 'outerSearch',
-//        'description' => '',
-//    ),
-
+    'tpl.modTree.paginateBtns' => array(
+        'file' => 'paginateBtns',
+        'description' => '',
+    ),
     'tpl.modTree.itemSearchField' => array(
         'file' => 'itemSearchField',
         'description' => '',

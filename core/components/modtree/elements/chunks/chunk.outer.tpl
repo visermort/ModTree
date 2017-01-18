@@ -1,18 +1,18 @@
 <div class="mod-tree container clearfix">
     [[-tree]]
     <div class="mod-tree__tree">
-        <div class="mod-tree__panel">
+        <div class="mod-tree__panel [[+searchfields:is=``:then=`hidden`]]" ">
             <div class="mod-tree__seach"
                 data-limit="[[+limitList]]"
                 data-linkway="[[+linkWay]]"
                 data-sortby="[[+sortBy]]"
                 data-sortdir="[[+sortDir]]"
-                data-paginate-list="[[+paginateList]]">
-
+                data-paginate-list="[[+paginateList]]"
+               >
                 [[+searchfields:ne=``:then=`
                     <ul class="mod-tree__seach-fields">[[+searchfields]]</ul>
                     <div class="mod-tree_seach-buttons">
-                        <button data-page="0" class="mod-tree_seach-button button">Поиск</button>
+                        <button data-page="0" class="mod-tree_seach-button button">[[+button-label]]</button>
                     </div>
                 `]]
             </div>
@@ -22,34 +22,37 @@
                     [[+itemHiddenList]]
                     [[+itemHiddenTree]]
                 </ul>
-                <button  class="mod-tree__paginate-button mod-tree__paginate-button-template"></button>
+                    [[+buttonHidden]]
+                [[-<button  class="mod-tree__paginate-button mod-tree__paginate-button-template"></button>]]
             </div>
         </div>
-        [[-list after search of after page load]]
+        [[-          list after search of after page load         ]]
         <div class="mod-tree__panel">
-            <ul  class="mod-tree__list hidden"
+            <ul  class="mod-tree__list [[+items:is=``:then=`hidden`]]"
                 data-limit="[[+limit]]"
                 data-linkway="[[+linkWay]]"
                 data-sortby="[[+sortBy]]"
-                data-sortdir="[[+sortDir]]">
+                data-sortdir="[[+sortDir]]"
+                data-content-id-prefix="[[+contentIdPrefix]]">
                 [[+items]]
             </ul>
-            <div class="mod-tree__paginate hidden">
+            <div class="mod-tree__paginate [[+buttons:is=``:then=`hidden`]]">
+                [[+buttons]]
             </div>
-            <div class="mod-tree__search-result [[+limitList:is=`0`:or:if=`[[+countResult]]`:is=`0`:then=`hidden`]]">
+            <div class="mod-tree__search-result [[+limitList:is=`0`:or:if=`[[+pagination.countResult]]`:is=`0`:then=`hidden`]]">
                 Записей
-                <span data-name="countResult"> [[+countResult]] </span>
+                <span data-name="countResult"> [[+pagination.countResult]] </span>
                 из
-                <span data-name="count"> [[+count]] </span>
+                <span data-name="count"> [[+pagination.count]] </span>
                 .Страница
-                <span data-name="page"> [[+page]] </span>
+                <span data-name="page"> [[+pagination.page]] </span>
                 из
-                <span data-name="pages"> [[+pages]]</span>
+                <span data-name="pages"> [[+pagination.pages]]</span>
             </div>
         </div>
 
     </div>
-    [[-resource content]]
+    [[-     resource content            ]]
     <div class="mod-tree__content mod-tree__panel"  >
         <h4 id="modtree-pagetitle" class="mod-tree__content-header"> </h4>
         <div class="mod-tree__content-description">
@@ -68,7 +71,7 @@
         <div class="mod-tree__content-uri"><a id="modtree-uri" href=""><span id="modtree-urltext"></span></a></div>
     </div>
 </div>
-[[-preloader]]
+[[-         preloader        ]]
 <div id="floatingCirclesG">
     <div class="f_circleG" id="frotateG_01"></div>
     <div class="f_circleG" id="frotateG_02"></div>

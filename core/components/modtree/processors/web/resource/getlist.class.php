@@ -3,6 +3,8 @@
 class modTreeResourceGetProcessor extends  modProcessor
 {
 
+    private $queryText;
+    private $queryCountText;
 
     public function checkPermissions()
     {
@@ -11,13 +13,16 @@ class modTreeResourceGetProcessor extends  modProcessor
 
     public function process()
     {
-        $parent = $this->getProperty('parent');
+        $id = $this->getProperty('id');
         $limit = $this->getProperty('limit');
         $sortBy = $this->getProperty('sortBy');
         $sortDir = $this->getProperty('sortDir');
         $page = ($this->getProperty('page'))? $this->getProperty('page') : 1;
         $searchParams = json_decode($this->getProperty('searchParams'));
         $paginateList = $this->getProperty('paginateList');
+        $queryLinks = $this->getProperty('queryLinks');
+        $linkWay = $this->getProperty('linkWay');
+
 
         //$page = 2;
         //$limit = 2;
@@ -26,34 +31,36 @@ class modTreeResourceGetProcessor extends  modProcessor
         // Build queryes
 
 
-        $query = $this->modx->newQuery('modResource');
-        $queryCount = $this->modx->newQuery('modResource');
-        $query->select(['modResource.*']);
-        $queryCount->select(['count(*)']);
+//        $query = $this->modx->newQuery('modResource');
+//        $queryCount = $this->modx->newQuery('modResource');
+//        $query->select(['modResource.*']);
+//        $queryCount->select(['count(*)']);
+//
+//        $query->where(['published'=> 1, 'deleted' => 0,]);
+//        $queryCount->where(['published'=> 1, 'deleted' => 0,]);
+//        if ($parent) {
+//            $query->where(['parent'=> $parent]);
+//            $queryCount->where(['parent'=> $parent]);
+//        }
+//        foreach ($searchParams as $searchParam) {
+//            $query->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
+//            $queryCount->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
+//        }
+//        $query->sortby($sortBy, $sortDir);
+//        if ($limit > 0) {
+//            $query->limit($limit, $offset);
+//        }
+        if ($queryLinks > 0) {
+            //ищем связанные ресурсы
+            $resMaster = $this->makeQueryLinks($id, $linkWay, $limit, $offset, $sortBy, $sortDir, false);
+            $count = $this->makeQueryLinks($id, $linkWay, $limit, $offset, $sortBy, $sortDir, false);
+        } else {
+            //ищем просто ресурсы
+            $resMaster = $this->makeQueryResource($searchParams, $id, $limit, $offset, $sortBy, $sortDir, false);
+            $count = $this->makeQueryResource($searchParams, $id, $limit, $offset, $sortBy, $sortDir, true);
+        }
 
-        $query->where(['published'=> 1, 'deleted' => 0,]);
-        $queryCount->where(['published'=> 1, 'deleted' => 0,]);
-        if ($parent) {
-            $query->where(['parent'=> $parent]);
-            $queryCount->where(['parent'=> $parent]);
-        }
-        foreach ($searchParams as $searchParam) {
-            $query->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
-            $queryCount->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
-        }
-        $query->sortby($sortBy, $sortDir);
-        if ($limit > 0) {
-            $query->limit($limit, $offset);
-        }
-        $queryCount->prepare();
-        $queryCount->stmt->execute();
-        $count = (int) $queryCount->stmt->fetchColumn();
         $pages = ($limit == 0) ? 0 : ceil($count/$limit);
-
-        $query->prepare();
-        $queryText = $query->toSQL(true);
-        $query->stmt->execute();
-        $resMaster = $query->stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
         for ($i = 0; $i < count($resMaster); $i++){
@@ -70,7 +77,9 @@ class modTreeResourceGetProcessor extends  modProcessor
                 'offset' => $offset,
                 'buttons' => $this->makePaginate($page, $pages, $paginateList),
                 'searchParams' => $searchParams,
-                'queryText' => $queryText,
+                'queryText' => $this->queryText,
+                'queryCountText' => $this->queryCountText,
+                'queryLinks' => $queryLinks,
             ],
             'items' => $resMaster,
         ]);
@@ -103,7 +112,6 @@ class modTreeResourceGetProcessor extends  modProcessor
             return;
         }
         $buttons = [];
- //       if ($paginateList) {
         if (true){
             //кнопки в виде списка
             for($i = 0; $i < $pages; $i++) {
@@ -120,6 +128,99 @@ class modTreeResourceGetProcessor extends  modProcessor
 
     }
 
+    private function makeQueryResource($searchParams, $parent, $limit, $offset, $sortBy, $sortDir, $count)
+    {
+        $query = $this->modx->newQuery('modResource');
+        if (!$count) {
+            $query->select(['modResource.*']);
+        } else {
+            $query->select(['count(*)']);
+        }
+
+        $query->where(['published'=> 1, 'deleted' => 0,]);
+        if ($parent) {
+            $query->where(['parent'=> $parent]);
+        }
+        foreach ($searchParams as $searchParam) {
+            $query->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
+        }
+        if (!$count) {
+            $query->sortby($sortBy, $sortDir);
+            if ($limit > 0) {
+                $query->limit($limit, $offset);
+            }
+        }
+        $query->prepare();
+        $query->stmt->execute();
+        if ($count) {
+            $this->queryCountText = $query->toSQL();
+            return (int) $query->stmt->fetchColumn();
+        } else {
+            $this->queryText = $query->toSQL();
+            return $query->stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+
+
+    private function makeQueryLinks($parent, $linkWay, $limit, $offset, $sortBy, $sortDir, $count)
+    {
+        $resources = $this->modx->getTableName('modResource');
+        $treeItems = $this->modx->getTableName('modTreeItem');
+        if ($count) {
+            if ($linkWay > 0) {
+                $sql = 'select mr.id from ' . $resources . ' mr INNER JOIN ' .
+                    $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where '.
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 ';
+            } elseif ($linkWay < 0 ) {
+                $sql = 'select mr.id from ' .  $resources . ' mr inner join ' .
+                    $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where '.
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 ';
+            } else {
+                $sql = 'select mr.id from ' . $resources . ' mr inner join ' .
+                    $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where '.
+                    ' `master` = :id  and `published` = 1 and `deleted` = 0 union'.
+                    ' select mr.id from ' .
+                    $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where '.
+                    ' `slave` = :id and `published` = 1 and `deleted` = 0 ';
+            }
+            $sql = 'select count(*) from (' . $sql . ') as tt';
+        } else {
+            if ($linkWay > 0) {
+                $sql = 'SELECT mr.*,mt.linkdate,mt.linktitle,mt.linktext FROM ' . $resources . ' mr INNER JOIN ' .
+                    $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where '.
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 ';
+            } elseif ($linkWay < 0 ) {
+                $sql = 'select mr.*,mt.linkdate,mt.linktitle,mt.linktext from ' . $resources . ' mr inner join ' .
+                    $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where '.
+                    ' `slave` = :id and `published` = 1 and `deleted` = 0 ';
+            } else {
+                $sql = 'select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' . $resources . ' mr inner join ' .
+                    $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where '.
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 union'.
+                    ' select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' .
+                    $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where '.
+                    ' `slave` = :id and `published` = 1 and `deleted` = 0 ';
+            }
+
+            $sql .= 'order by `' . $sortBy .'` ' .$sortDir;
+            if ($limit) {
+                $sql .= ' limit '.$offset.','.$limit;
+            }
+        }
+        if ($count) {
+            $this->queryCountText = $sql;
+        } else {
+            $this->queryText = $sql;
+        }
+        $query = $this->modx->prepare($sql);
+        $query->bindParam(':id', $parent);
+        $query->execute();
+        if ($count) {
+            return (int) $query->fetchColumn();
+        } else {
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
 }
 
 return 'modTreeResourceGetProcessor';

@@ -1,3 +1,4 @@
+
 //при отрытии документа - события: отрыть узел, кликнцть на титле в узле
 Array.from(document.getElementsByClassName("mod-tree__item-icon")).forEach(
     function(element, index, array) {
@@ -9,11 +10,13 @@ Array.from(document.getElementsByClassName("mod-tree__item-title")).forEach(
         element.onclick = titleClick;
     }
 );
-// var button = document.getElementById('mod-tree_seach-button');
-//     if (button !=null ) {
-//         button.onclick  = searchResources;
-//     }
+
 Array.from(document.getElementsByClassName("mod-tree_seach-button")).forEach(
+    function(element, index, array) {
+        element.onclick = searchResources;
+    }
+);
+Array.from(document.getElementsByClassName("mod-tree__paginate-button")).forEach(
     function(element, index, array) {
         element.onclick = searchResources;
     }
@@ -21,7 +24,7 @@ Array.from(document.getElementsByClassName("mod-tree_seach-button")).forEach(
 
 //при открытии - закрытии узла
 function iconClick(e) {
-    var element = getParentTargetElement(e.target, 'mod-tree__item-icon'),
+    var element = getParentTargetElement(e.target, 'mod-tree__item-icon', true),
         classes = element.classList;
     if (classes.contains('promised')) {
         if (checkRepeated(element)) {
@@ -33,14 +36,14 @@ function iconClick(e) {
         openItem(element);
     }
 }
-//нажание на титле у узла
+//нажатие на титле у узла
 function titleClick(e) {
-    var element = getParentTargetElement(e.target, 'mod-tree__item-title'),
-        parent = element.parentElement,
-        ul  = parent.parentElement,
+    var element = getParentTargetElement(e.target, 'mod-tree__item-title', true),
+        li = getParentTargetElement(element, 'mod-tree__item', false),
+        //ul  = parent.parentElement,
         //url = ul.getAttribute('data-url'),
         url = 'modtreeajax.php',
-        data = 'id='+parent.getAttribute('data-id')+
+        data = 'id='+li.getAttribute('data-id')+
             '&cts=web'+
             '&action=web/resource/get',
         action = 'web/resource/get';
@@ -53,25 +56,26 @@ function titleClick(e) {
 //при завершении запроса при клике на титле узла - вывод данных объекта в шаблон
 function showObject(element, data) {
     //получили данные, меняем в шаблоне
-    replaceResourceData(data);
+    var idPrefix = getParentTargetElement(element, 'mod-tree__list', true).getAttribute('data-content-id-prefix');
+    replaceResourceData(data, idPrefix);
     removeActiveNodes();
     element.classList.add('active');
 }
 
 //запрос на дочерние элементы узла
 function getItemChildData(element) {
-    var parent = element.parentElement,
-        ul  = parent.parentElement,
+    var li = getParentTargetElement(element ,'mod-tree__item', true),
+        ul  = getParentTargetElement(li, 'mod-tree__list', false),
 //        url = ul.getAttribute('data-url'),
         url = 'modtreeajax.php',
-        data = 'id='+parent.getAttribute('data-id')+
+        data = 'id='+li.getAttribute('data-id')+
             '&limit='+ul.getAttribute('data-limit')+
             '&sortBy='+ul.getAttribute('data-sortby')+
             '&sortDir='+ul.getAttribute('data-sortDir')+
             '&linkWay='+ul.getAttribute('data-linkWay')+
-            '&cts=web'+
-            '&action=web/tree/getlist',
-        action = 'web/tree/getlist';
+            '&queryLinks=1'+
+            '&action=web/resource/getlist',
+        action = 'web/resource/getlist';
     //приготовили данные и сделали запрос, при завершении функция
     httpRequest(element, url, action, data, makeChildNodes);
 }
@@ -80,14 +84,14 @@ function getItemChildData(element) {
 function makeChildNodes(element, data) {
     console.log(data);
     if (data.items.length > 0) {
-        var tree = getParentTargetElement(element, 'mod-tree__tree'),
+        var tree = getParentTargetElement(element, 'mod-tree__tree', true),
             hidden = document.getElementsByClassName('mod-tree__tree-templates')[0],
-            parent = element.parentElement,
-            ul = parent.parentElement,
+            li = getParentTargetElement(element, 'mod-tree__item'),
+            ul  = getParentTargetElement(li, 'mod-tree__list', false),
             ulNew = ul.cloneNode(true),
             liTemplate = hidden.getElementsByClassName('mod-tree__item-tree')[0],//.cloneNode(true),
             //liTemplate = parent.cloneNode(true),
-            content = parent.getElementsByClassName('mod-tree__item-content');
+            content = li.getElementsByClassName('mod-tree__item-content');
         ulNew.innerHTML = '';
         liTemplate.getElementsByClassName('mod-tree__item-title')[0].classList.remove('active');
         content[0].append(ulNew);
@@ -112,7 +116,7 @@ function makeChildNodes(element, data) {
 //нажатие на "Поиск" и на конопки пагинации
 function searchResources(e) {
     var button = e.target,
-        fieldsDiv = getParentTargetElement(button, 'mod-tree__tree').getElementsByClassName('mod-tree__seach')[0],
+        fieldsDiv = getParentTargetElement(button, 'mod-tree__tree', true).getElementsByClassName('mod-tree__seach')[0],
         fields = fieldsDiv.getElementsByClassName('mod-tree__search-fields-item-field'),
         params = [];
     console.log(fieldsDiv, fields);
@@ -132,9 +136,10 @@ function searchResources(e) {
                 '&sortDir='+fieldsDiv.getAttribute('data-sortDir')+
                 '&linkWay='+fieldsDiv.getAttribute('data-linkWay')+
                 '&searchParams='+JSON.stringify(params)+
-                 '&action=web/resource/getlist'+
+                '&action=web/resource/getlist'+
                 '&paginateList='+fieldsDiv.getAttribute('data-paginate-list')+
-                '&page='+button.getAttribute('data-page'),
+                '&page='+button.getAttribute('data-page')+
+                '&queryLinks='+fieldsDiv.getAttribute('data-query-inks'),
             url = 'modtreeajax.php',
             action = 'web/resource/getlist';
         console.log(data, url, action);
@@ -145,7 +150,7 @@ function searchResources(e) {
 //после поиска, отображение результатов
 function makeSearchList(element, data) {
     console.log(data);
-    var tree = getParentTargetElement(element, 'mod-tree__tree'),
+    var tree = getParentTargetElement(element, 'mod-tree__tree', false),
         hidden = document.getElementsByClassName('mod-tree__tree-templates')[0],
         liTemplate = hidden.getElementsByClassName('mod-tree__item-list')[0].cloneNode(true),
         ul = tree.getElementsByClassName('mod-tree__list')[0],
@@ -170,7 +175,7 @@ function makeSearchList(element, data) {
         if (data.pagination.buttons != null && data.pagination.buttons.length > 1) {
             data.pagination.buttons.forEach(function(item, index){
                 console.log('button',item);
-                var button = tree.getElementsByClassName('mod-tree__paginate-button-template')[0].cloneNode(true);
+                var button = hidden.getElementsByClassName('mod-tree__paginate-button')[0].cloneNode(true);
                 button.classList.remove('mod-tree__paginate-button-template');
                 button.classList.remove('hidden');
                 button.innerHTML = item.page;
@@ -225,28 +230,43 @@ function httpRequest(element, url, action, data, onLoad){
 //вспомогательное
 
 //поиск родительского узла с нужным классом
-function getParentTargetElement(element, className){
-    target = element;
-    while (!target.classList.contains(className)) {
+// function getParentTargetElement(element, className){
+//     target = element;
+//     while (!target.classList.contains(className)) {
+//         target = target.parentElement;
+//         if (target == null) {
+//             return;
+//         }
+//     }
+//     return target;
+// }
+function getParentTargetElement(element, className, self){
+    if (self == true) {
+        target = element;
+    } else {
+        target = element.parentElement;
+    }
+    while (target != null  && !target.classList.contains(className)) {
         target = target.parentElement;
+
     }
     return target;
 }
 
 //открыть узел - назначение классов
 function openItem(element) {
-    parent = element.parentElement;
-    parent.classList.remove('closed');
-    parent.classList.add('open');
+    li = getParentTargetElement(element, 'mod-tree__item', true);
+    li.classList.remove('closed');
+    li.classList.add('open');
     element.classList.remove('closed');
     element.classList.add('open');
 }
 
 //закрыть узел - назначение классов
 function closeItem(element) {
-    parent = element.parentElement;
-    parent.classList.remove('open');
-    parent.classList.add('closed');
+    li = getParentTargetElement(element, 'mod-tree__item', true);
+    li.classList.remove('open');
+    li.classList.add('closed');
     element.classList.remove('open');
     element.classList.add('closed');
 }
@@ -262,30 +282,23 @@ function removeActiveNodes(){
 
 //проверка узла, что второй родительский - тот же ресурс
 function checkRepeated(element) {
-    var li = element.parentElement,
+    var li = getParentTargetElement(element, 'mod-tree__item', true),
         id = li.getAttribute('data-id'),
-        grandParentLi = getParents(li, 6);
+        //grandParentLi = getParents(li, 6),
+        parentLi = getParentTargetElement(li, 'mod-tree__item', false);
+    if (parentLi == null) {
+        return true;
+    }
+    var grandParentLi = getParentTargetElement(parentLi, 'mod-tree__item', false);
     if (grandParentLi == null) {
         return true;
     }
-    id2 = grandParentLi.getAttribute('data-id');
+    var id2 = grandParentLi.getAttribute('data-id');
     if (id != id2) {
         return true;
     }
     element.classList.remove('promised');
     element.classList.add('leaf');
-}
-
-//нахождение родительского узла нужного уровня
-function getParents(element, level) {
-    var parent = element;
-    for (var i = 0; i < level; i++) {
-        parent = parent.parentElement;
-        if (parent == null) {
-            return null;
-        }
-    }
-    return parent;
 }
 
 //замена данных в элементе дерева
@@ -305,10 +318,10 @@ function replaceItemData(element, data){
 }
 
 //замена данных в шаблоне ресурса
-function replaceResourceData(data) {
+function replaceResourceData(data, idPrefix) {
 
     for (var key in data) {
-        element = document.getElementById('modtree-'+key);
+        element = document.getElementById(idPrefix+key);
         if (element != null) {
             if (key.substring(0, 3) == 'uri') {
                 //обрабатываем ссылки - особый случай

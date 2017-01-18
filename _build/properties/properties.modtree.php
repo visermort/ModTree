@@ -19,6 +19,10 @@ $tmp = array(
         'type' => 'textfield',
         'value' => 'tpl.modTree.resource',
     ),
+    'tplButtons' => array(
+        'type' => 'textfield',
+        'value' => 'tpl.modTree.paginateBtns',
+    ),
     'sortBy' => array(
         'type' => 'textfield',
         'value' => 'menuindex',
@@ -43,6 +47,11 @@ $tmp = array(
         'type' => 'numberfield',
         'value' => 0,
     ),
+    'contentIdPrefix' => [
+        'type' => 'textfield',
+        'value' => 'modtree-',
+    ],
+    
 );
 
 foreach ($tmp as $k => $v) {
