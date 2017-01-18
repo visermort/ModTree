@@ -53,7 +53,7 @@ class modTreeResourceGetProcessor extends  modProcessor
         if ($queryLinks > 0) {
             //ищем связанные ресурсы
             $resMaster = $this->makeQueryLinks($id, $linkWay, $limit, $offset, $sortBy, $sortDir, false);
-            $count = $this->makeQueryLinks($id, $linkWay, $limit, $offset, $sortBy, $sortDir, false);
+            $count = $this->makeQueryLinks($id, $linkWay, $limit, $offset, $sortBy, $sortDir, true);
         } else {
             //ищем просто ресурсы
             $resMaster = $this->makeQueryResource($searchParams, $id, $limit, $offset, $sortBy, $sortDir, false);
@@ -69,6 +69,7 @@ class modTreeResourceGetProcessor extends  modProcessor
 
         return $this->success('',[
             'pagination' => [
+                'id' => $id,
                 'count' => $count,
                 'countResult' => count($resMaster),
                 'limit' => $limit,
@@ -153,10 +154,10 @@ class modTreeResourceGetProcessor extends  modProcessor
         $query->prepare();
         $query->stmt->execute();
         if ($count) {
-            $this->queryCountText = $query->toSQL();
+            $this->queryCountText = $query->toSQL(true);
             return (int) $query->stmt->fetchColumn();
         } else {
-            $this->queryText = $query->toSQL();
+            $this->queryText = $query->toSQL(true);
             return $query->stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
@@ -216,8 +217,10 @@ class modTreeResourceGetProcessor extends  modProcessor
         $query->bindParam(':id', $parent);
         $query->execute();
         if ($count) {
+            //$this->queryCountText = $query->toSQL(true);
             return (int) $query->fetchColumn();
         } else {
+           // $this->queryText = $query->toSQL(true);
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
     }

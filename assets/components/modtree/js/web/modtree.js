@@ -139,7 +139,8 @@ function searchResources(e) {
                 '&action=web/resource/getlist'+
                 '&paginateList='+fieldsDiv.getAttribute('data-paginate-list')+
                 '&page='+button.getAttribute('data-page')+
-                '&queryLinks='+fieldsDiv.getAttribute('data-query-inks'),
+                '&queryLinks='+fieldsDiv.getAttribute('data-query-links')+
+                '&id='+fieldsDiv.getAttribute('data-id'),
             url = 'modtreeajax.php',
             action = 'web/resource/getlist';
         console.log(data, url, action);

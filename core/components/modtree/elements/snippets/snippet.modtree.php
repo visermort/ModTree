@@ -8,60 +8,125 @@
 //    return 'Could not load modTree class!';
 //}
 
-$tplList = $modx->getOption('tplList', $scriptProperties, 'tpl.ModTree.itemTree');
+//шаблон списка
+$tplList = $modx->getOption('tplList', $scriptProperties, 'tpl.ModTree.itemList');
+//шаблон для элемента дерева
 $tplTree = $modx->getOption('tplTree', $scriptProperties, 'ModTree.itemTree');
+//шаблон поля полей поиска
+$tplSearchField = $modx->getOption('tplSearchField', $scriptProperties, 'tpl.ModTree.itemSearchField');
+//шаблон вывода
 $tplOuter = $modx->getOption('tplOuter', $scriptProperties, 'tpl.ModTree.outer');
+//шаблон кнопок пагинации
 $tplButtons = $modx->getOption('tplButtons', $scriptProperties, 'tpl.ModTree.paginateBtns');
 
-$sortBy = $modx->getOption('sortBy', $scriptProperties, 'pagetitle');
+//сортировка
+$sortBy = $modx->getOption('sortBy', $scriptProperties, 'menuindex');
 $sortDir = $modx->getOption('sortDir', $scriptProperties, 'ASC');
+//ограничиние в дереве
 $limit = $modx->getOption('limit', $scriptProperties, 0);
+//ограничение в списке
 $limitList = $modx->getOption('limitList', $scriptProperties, 15);
+//поиск для списка: 1 - связей, 0 - ресурсов
+$queryLinks = $modx->getOption('queryLinks', $scriptProperties, '1');
+//родительский для списка, если $queryLinks = 1 то по умолчанию текуций ресурс
+$parent = $modx->getOption('parent', $scriptProperties, '');
+//делать ли поиск сразу  - если поиск связей, то 1
+//делать ли поиск сразу  - если поиск связей, то 1
+$queryForce = $modx->getOption('queryForce', $scriptProperties, '1');
+//направление связи: 0 - в обе стороны, 1 - master->slave, 0 - slave->master
 $linkWay = $modx->getOption('linkWay', $scriptProperties, 0);
-$parent = $modx->getOption('parent', $scriptProperties, $modx->resource->get('id'));
+//вид кнопок пагинации - пока только список
 $paginateList = $modx->getOption('paginateList', $scriptProperties, 0);
+//префикс id полей контентк
 $contentIdPrefix = $modx->getOption('contentIdPrefix', $scriptProperties, 'modtree-');
+//поля поиска
+$searchFields = explode(',', $modx->getOption('searchFields', $scriptProperties, 'padetitle, content'));
+
+//если ищем связи, то по parent умолчанию текущий ресурс
+if ($queryLinks == 1) {
+    $parent = $parent ? $parent : $modx->resource->get('id');
+    $queryForce = 1;
+    $searchFields = [];
+}
+
+//return print_r([
+//    'queryLinks' => $queryLinks,
+//    'queryForce' => $queryForce,
+//    'parent' => $parent,
+//    'searchFields' => $searchFields,
+//     'limit' => $limitList,
+//
+//
+//], 1);
+
+$items = '';
+$buttons = '';
+$resMaster = [];
+$itemsSearch = '';
+$pagination = [];
+//поля для поиска
+
+foreach ($searchFields as $searchField) {
+    $itemsSearch .= $modx->getChunk($tplSearchField, [
+        'name' => $searchField,
+        'label' => $searchField,
+    ]);
+}
+//return print_r($searchFields, 1);
 
 
-//run processor
+if ($queryForce == 1) {
+    //если поиск "сразу"
+    //run processor
 
-$result = $modx->runProcessor('web/resource/getlist', [
+    $result = $modx->runProcessor('web/resource/getlist', [
         'id' => $parent,
         'sortBy' => $sortBy,
         'sortDir' => $sortDir,
         'limit' => $limitList,
-        'linkWay' => $linkWay,
         'paginateList' => $paginateList,
-        'queryLink' => 1,
-    ],[
-        'processors_path' => $modx->getOption('modtree_core_path').'processors/',
+        'queryLinks' => $queryLinks,
+    ], [
+        'processors_path' => $modx->getOption('modtree_core_path') . 'processors/',
     ]);
 
-$resMaster = $result->response['object']['items'];
-//return print_r($resMaster['object']);
-
-//Output
-$items = '';
-foreach ($resMaster as $item) {
-    $items .= $modx->getChunk($tplList, $item);
+    $resMaster = $result->response['object']['items'];
+    $pagination = $result->response['object']['pagination'];
+    //search result - на будущее, если нужен изначальный список
+    foreach ($resMaster as $item) {
+        $items .= $modx->getChunk($tplList, $item);
+    }
+    foreach ($result->response['object']['pagination']['buttons'] as $button) {
+        $buttons .= $modx->getChunk($tplButtons, [
+            'page' => $button['page'],
+            'current' => $button['current'],
+        ]);
+    }
+//return print_r($result->response['object']);
 }
+
+
+//шаблоны
 $itemHiddenList = $modx->getChunk($tplList, []);
 $itemHiddenTree = $modx->getChunk($tplTree, []);
 $buttonHidden = $modx->getChunk($tplButtons, []);
-
-
+//Output
 return $modx->getChunk($tplOuter, [
+    'id' => $parent,
     'itemHiddenList' => $itemHiddenList,
     'itemHiddenTree' => $itemHiddenTree,
     'buttonHidden' => $buttonHidden,
+    'searchfields' => $itemsSearch,
     'items' => $items,
     'sortBy' => $sortBy,
     'sortDir' => $sortDir,
     'limit' => $limit,
     'limitList' => $limitList,
-    'pagination' => $result->response['object']['pagination'],
+    'pagination' => $pagination,
     'paginateList' => $paginateList,
     'linkWay' => $linkWay,
+    'button-label' => 'Поиск',
     'contentIdPrefix' => $contentIdPrefix,
     'buttons' => $buttons,
+    'queryLinks' => $queryLinks,
 ]);

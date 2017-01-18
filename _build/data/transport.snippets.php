@@ -9,10 +9,10 @@ $tmp = array(
         'file' => 'modtree',
         'description' => '',
     ),
-    'modTreeSearch' => array(
-        'file' => 'modtreeSearch',
-        'description' => '',
-    ),
+//    'modTreeSearch' => array(
+//        'file' => 'modtreeSearch',
+//        'description' => '',
+//    ),
     'modTreeAjax' => array(
         'file' => 'modtreeAjax',
         'description' => '',

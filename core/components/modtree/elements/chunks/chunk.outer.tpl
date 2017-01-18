@@ -3,11 +3,13 @@
     <div class="mod-tree__tree">
         <div class="mod-tree__panel [[+searchfields:is=``:then=`hidden`]]" ">
             <div class="mod-tree__seach"
+                data-id="[[+id]]"
                 data-limit="[[+limitList]]"
                 data-linkway="[[+linkWay]]"
                 data-sortby="[[+sortBy]]"
                 data-sortdir="[[+sortDir]]"
                 data-paginate-list="[[+paginateList]]"
+                data-query-links="[[+queryLinks]]"
                >
                 [[+searchfields:ne=``:then=`
                     <ul class="mod-tree__seach-fields">[[+searchfields]]</ul>
