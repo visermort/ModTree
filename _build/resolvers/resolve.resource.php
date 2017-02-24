@@ -15,6 +15,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         $resource->set('pagetitle', 'modtree_resource');
         $resource->set('hidemenu', 1);
         $resource->set('template', 0);
+        $resource->set('searchable', 0);
         $resource->set('show_in_tree', 0);
         $resource->setContent('[[!modTreeAjax]]');
         $resource->save();

@@ -115,7 +115,7 @@ function makeChildNodes(element, data) {
 
 //нажатие на "Поиск" и на конопки пагинации
 function searchResources(e) {
-    var button = e.target,
+    var button = getParentTargetElement(e.target, 'mod-tree__run-search', true),
         fieldsDiv = getParentTargetElement(button, 'mod-tree__tree', true).getElementsByClassName('mod-tree__seach')[0],
         fields = fieldsDiv.getElementsByClassName('mod-tree__search-fields-item-field'),
         params = [];
@@ -179,8 +179,9 @@ function makeSearchList(element, data) {
                 var button = hidden.getElementsByClassName('mod-tree__paginate-button')[0].cloneNode(true);
                 button.classList.remove('mod-tree__paginate-button-template');
                 button.classList.remove('hidden');
-                button.innerHTML = item.page;
+                //button.innerHTML = item.page;
                 button.setAttribute('data-page', item.page);
+                replaceItemData(button, {'page': item.page});
                 if (item.current == true) {
                     button.classList.add('current');
                     //button.setAttribute('disabled', true);
@@ -204,19 +205,25 @@ function makeSearchList(element, data) {
 
 //айакс - запрос - общий
 function httpRequest(element, url, action, data, onLoad){
-    var preloader = document.getElementById('floatingCirclesG');
+    //var preloader = document.getElementById('floatingCirclesG');
+    //var preloaderWrapper = getParentTargetElement(element, 'floatingBarsG-wrapper', true);
+    var preloaderWrapper = getPreloaderWrapper(element);
+    if (preloaderWrapper) {
+        var preloader = preloaderWrapper.getElementsByClassName('floatingBarsG')[0];
+    }
     xhr = new XMLHttpRequest();
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.setRequestHeader('Action', action);
     xhr.responseType='json';
     xhr.upload.onprogress = function(){
-        preloader.style.display = 'block';
+        showPreloader(preloaderWrapper, preloader, true);
     };
     xhr.send(data);
 
     xhr.onload = xhr.onerror = function () {
-        preloader.style.display = 'none';
+//        preloader.style.display = 'none';
+        showPreloader(preloaderWrapper, preloader, false);
         var response = xhr.response;
         console.log(response);
         if (response.object != null) {
@@ -229,18 +236,36 @@ function httpRequest(element, url, action, data, onLoad){
 }
 
 //вспомогательное
+//находим обёртку прелоудера - рядом с элементом
+function getPreloaderWrapper(element) {
+    var parent = getParentTargetElement(element, 'floatingBarsG-parent', true);
+    if (parent) {
+        wrapper = parent.getElementsByClassName('floatingBarsG-wrapper')[0];
+    }
+    return wrapper;
+}
+
+function showPreloader(wrapper, preloader, show) {
+    if (show) {
+        if (wrapper) {
+            wrapper.classList.add('loading');
+        }
+        if (preloader) {
+            preloader.classList.remove('hidden');
+        }
+    } else {
+        if (wrapper) {
+            wrapper.classList.remove('loading');
+        }
+        if (preloader) {
+            preloader.classList.add('hidden');
+        }
+    }
+}
+
 
 //поиск родительского узла с нужным классом
-// function getParentTargetElement(element, className){
-//     target = element;
-//     while (!target.classList.contains(className)) {
-//         target = target.parentElement;
-//         if (target == null) {
-//             return;
-//         }
-//     }
-//     return target;
-// }
+
 function getParentTargetElement(element, className, self){
     if (self == true) {
         target = element;

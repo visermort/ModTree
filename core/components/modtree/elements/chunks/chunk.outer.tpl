@@ -14,8 +14,20 @@
                 [[-   search fields    ]]
                 [[+searchfields:ne=``:then=`
                     <ul class="mod-tree__seach-fields">[[+searchfields]]</ul>
-                    <div class="mod-tree_seach-buttons">
-                        <button data-page="0" class="mod-tree_seach-button button">[[%modtree_chunk_search]]</button>
+                    <div class="mod-tree_seach-buttons floatingBarsG-parent">
+                        <button data-page="0" class="mod-tree_seach-button mod-tree__run-search button floatingBarsG-wrapper">
+                            <div class="floatingBarsG hidden">
+                                <div class="blockG  rotateG_01"></div>
+                                <div class="blockG  rotateG_02"></div>
+                                <div class="blockG  rotateG_03"></div>
+                                <div class="blockG  rotateG_04"></div>
+                                <div class="blockG  rotateG_05"></div>
+                                <div class="blockG  rotateG_06"></div>
+                                <div class="blockG  rotateG_07"></div>
+                                <div class="blockG  rotateG_08"></div>
+                            </div>
+                            [[%modtree_chunk_search]]
+                        </button>
                     </div>
                 `]]
             </div>
@@ -38,7 +50,7 @@
                 data-content-id-prefix="[[+contentIdPrefix]]">
                 [[+items]]
             </ul>
-            <div class="mod-tree__paginate [[+buttons:is=``:then=`hidden`]]">
+            <div class="mod-tree__paginate floatingBarsG-parent [[+buttons:is=``:then=`hidden`]]">
                 [[+buttons]]
             </div>
             <div class="mod-tree__search-result [[+limitList:is=`0`:or:if=`[[+pagination.countResult]]`:is=`0`:then=`hidden`]]">
@@ -73,15 +85,5 @@
         <div class="mod-tree__content-uri "><a id="modtree-uri" href="" class="hidden">[[%modtree_chunk_readmore]]</a></div>
     </div>
 </div>
-[[-         preloader        ]]
-<div id="floatingCirclesG">
-    <div class="f_circleG" id="frotateG_01"></div>
-    <div class="f_circleG" id="frotateG_02"></div>
-    <div class="f_circleG" id="frotateG_03"></div>
-    <div class="f_circleG" id="frotateG_04"></div>
-    <div class="f_circleG" id="frotateG_05"></div>
-    <div class="f_circleG" id="frotateG_06"></div>
-    <div class="f_circleG" id="frotateG_07"></div>
-    <div class="f_circleG" id="frotateG_08"></div>
-</div>
+
 

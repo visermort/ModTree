@@ -23,8 +23,8 @@ $limit = $modx->getOption('limit', $scriptProperties, 0);
 $limitList = $modx->getOption('limitList', $scriptProperties, 15);
 //поиск для списка: 1 - связей, 0 - ресурсов
 $queryLinks = $modx->getOption('queryLinks', $scriptProperties, '1');
-//родительский для списка, если $queryLinks = 1 то по умолчанию текуций ресурс
-$parent = $modx->getOption('parent', $scriptProperties, '');
+//родительский для списка, по умолчанию текуций ресурс
+$parent = $modx->getOption('parent', $scriptProperties, $modx->resource->get('id'));
 //делать ли поиск сразу  - если поиск связей, то 1
 //делать ли поиск сразу  - если поиск связей, то 1
 $queryForce = $modx->getOption('queryForce', $scriptProperties, '1');
@@ -37,9 +37,9 @@ $contentIdPrefix = $modx->getOption('contentIdPrefix', $scriptProperties, 'modtr
 //поля поиска
 $searchFields = explode(',', $modx->getOption('searchFields', $scriptProperties, 'padetitle, content'));
 
-//если ищем связи, то по parent умолчанию текущий ресурс
+//если ищем связи, то поиск сразу, поля для поиска очищаем
 if ($queryLinks == 1) {
-    $parent = $parent ? $parent : $modx->resource->get('id');
+   // $parent = $parent ? $parent : $modx->resource->get('id');
     $queryForce = 1;
     $searchFields = [];
 }
