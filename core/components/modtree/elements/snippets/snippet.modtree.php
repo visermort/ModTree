@@ -2,11 +2,6 @@
 /** @var modX $modx */
 /** @var array $scriptProperties */
 /** @var modTree $modTree */
-//if (!$modTree = $modx->getService('modtree', 'modTree', $modx->getOption('modtree_core_path', null,
-//        $modx->getOption('core_path') . 'components/modtree/') . 'model/modtree/', $scriptProperties)
-//) {
-//    return 'Could not load modTree class!';
-//}
 
 //шаблон списка
 $tplList = $modx->getOption('tplList', $scriptProperties, 'tpl.ModTree.itemList');
@@ -49,31 +44,22 @@ if ($queryLinks == 1) {
     $searchFields = [];
 }
 
-//return print_r([
-//    'queryLinks' => $queryLinks,
-//    'queryForce' => $queryForce,
-//    'parent' => $parent,
-//    'searchFields' => $searchFields,
-//     'limit' => $limitList,
-//
-//
-//], 1);
-
 $items = '';
 $buttons = '';
 $resMaster = [];
 $itemsSearch = '';
 $pagination = [];
+
 //поля для поиска
+
+$modx->lexicon->load($modx->getOption('cultureKey').':resource');
 
 foreach ($searchFields as $searchField) {
     $itemsSearch .= $modx->getChunk($tplSearchField, [
         'name' => $searchField,
-        'label' => $searchField,
+        'label' => $modx->lexicon('resource_'.$searchField),//$searchField,
     ]);
 }
-//return print_r($searchFields, 1);
-
 
 if ($queryForce == 1) {
     //если поиск "сразу"
@@ -102,11 +88,10 @@ if ($queryForce == 1) {
             'current' => $button['current'],
         ]);
     }
-//return print_r($result->response['object']);
 }
 
 
-//шаблоны
+//templates
 $itemHiddenList = $modx->getChunk($tplList, []);
 $itemHiddenTree = $modx->getChunk($tplTree, []);
 $buttonHidden = $modx->getChunk($tplButtons, []);
@@ -125,7 +110,6 @@ return $modx->getChunk($tplOuter, [
     'pagination' => $pagination,
     'paginateList' => $paginateList,
     'linkWay' => $linkWay,
-    'button-label' => 'Поиск',
     'contentIdPrefix' => $contentIdPrefix,
     'buttons' => $buttons,
     'queryLinks' => $queryLinks,

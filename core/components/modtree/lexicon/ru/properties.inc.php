@@ -6,3 +6,6 @@ $_lang['modtree_prop_sortBy'] = 'Поле сортировки.';
 $_lang['modtree_prop_sortDir'] = 'Направление сортировки.';
 $_lang['modtree_prop_tpl'] = 'Чанк оформления каждого ряда Связей.';
 $_lang['modtree_prop_toPlaceholder'] = 'Усли указан этот параметр, то результат будет сохранен в плейсхолдер, вместо прямого вывода на странице.';
+
+$_lang['modtree_chunk_search'] = 'Поиск';
+$_lang['modtree_chunk_readmore'] = 'Подробнее';

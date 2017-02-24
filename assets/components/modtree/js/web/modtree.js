@@ -327,8 +327,10 @@ function replaceResourceData(data, idPrefix) {
             if (key.substring(0, 3) == 'uri') {
                 //обрабатываем ссылки - особый случай
                 element.setAttribute('href', data[key]);
+                element.classList.remove('hidden');
             } else if ((key.substring(0, 5) == 'image')) {
                 element.setAttribute('src', data[key]);
+                element.classList.remove('hidden');
             } else {
                 element.innerHTML = data[key];
             }

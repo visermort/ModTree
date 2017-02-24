@@ -1,6 +1,6 @@
 Changelog for modTree.
 
 
-0.0.1-beta
+0.1.0-beta
 ==============
 -start project

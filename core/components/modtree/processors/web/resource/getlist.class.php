@@ -63,11 +63,11 @@ class modTreeResourceGetProcessor extends  modProcessor
         $pages = ($limit == 0) ? 0 : ceil($count/$limit);
 
 
-        for ($i = 0; $i < count($resMaster); $i++){
+        for ($i = 0; $i < count($resMaster); $i++) {
             $this->formatDates($resMaster[$i]);
         }
 
-        return $this->success('',[
+        return $this->success('', [
             'pagination' => [
                 'id' => $id,
                 'count' => $count,
@@ -84,10 +84,10 @@ class modTreeResourceGetProcessor extends  modProcessor
             ],
             'items' => $resMaster,
         ]);
-
     }
 
-    private function formatDates(array &$resourceArray) {
+    private function formatDates(array &$resourceArray)
+    {
         $format = $this->modx->getOption('modtree_date_format') .' '. $this->modx->getOption('modtree_time_format');
 
         if (!empty($resourceArray['pub_date']) && $resourceArray['pub_date'] != '0000-00-00 00:00:00') {
@@ -113,9 +113,9 @@ class modTreeResourceGetProcessor extends  modProcessor
             return;
         }
         $buttons = [];
-        if (true){
+        if (true) {
             //кнопки в виде списка
-            for($i = 0; $i < $pages; $i++) {
+            for ($i = 0; $i < $pages; $i++) {
                 $buttons[] = [
                     'page' => $i+1,
                     'current' => $i+1 == $page,
@@ -126,7 +126,6 @@ class modTreeResourceGetProcessor extends  modProcessor
 
         }
         return $buttons;
-
     }
 
     private function makeQueryResource($searchParams, $parent, $limit, $offset, $sortBy, $sortDir, $count)
@@ -142,8 +141,10 @@ class modTreeResourceGetProcessor extends  modProcessor
         if ($parent) {
             $query->where(['parent'=> $parent]);
         }
-        foreach ($searchParams as $searchParam) {
-            $query->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
+        if (isset($searchParams)) {
+            foreach ($searchParams as $searchParam) {
+                $query->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
+            }
         }
         if (!$count) {
             $query->sortby($sortBy, $sortDir);
@@ -172,7 +173,7 @@ class modTreeResourceGetProcessor extends  modProcessor
                 $sql = 'select mr.id from ' . $resources . ' mr INNER JOIN ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where '.
                     ' `master` = :id and `published` = 1 and `deleted` = 0 ';
-            } elseif ($linkWay < 0 ) {
+            } elseif ($linkWay < 0) {
                 $sql = 'select mr.id from ' .  $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where '.
                     ' `master` = :id and `published` = 1 and `deleted` = 0 ';
@@ -190,7 +191,7 @@ class modTreeResourceGetProcessor extends  modProcessor
                 $sql = 'SELECT mr.*,mt.linkdate,mt.linktitle,mt.linktext FROM ' . $resources . ' mr INNER JOIN ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where '.
                     ' `master` = :id and `published` = 1 and `deleted` = 0 ';
-            } elseif ($linkWay < 0 ) {
+            } elseif ($linkWay < 0) {
                 $sql = 'select mr.*,mt.linkdate,mt.linktitle,mt.linktext from ' . $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where '.
                     ' `slave` = :id and `published` = 1 and `deleted` = 0 ';

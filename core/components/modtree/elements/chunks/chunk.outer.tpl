@@ -1,7 +1,7 @@
 <div class="mod-tree container clearfix">
-    [[-tree]]
+    [[   -tree    ]]
     <div class="mod-tree__tree">
-        <div class="mod-tree__panel [[+searchfields:is=``:then=`hidden`]]" ">
+        <div class="mod-tree__panel [[+searchfields:is=``:then=`hidden`]]">
             <div class="mod-tree__seach"
                 data-id="[[+id]]"
                 data-limit="[[+limitList]]"
@@ -11,24 +11,24 @@
                 data-paginate-list="[[+paginateList]]"
                 data-query-links="[[+queryLinks]]"
                >
+                [[-   search fields    ]]
                 [[+searchfields:ne=``:then=`
                     <ul class="mod-tree__seach-fields">[[+searchfields]]</ul>
                     <div class="mod-tree_seach-buttons">
-                        <button data-page="0" class="mod-tree_seach-button button">[[+button-label]]</button>
+                        <button data-page="0" class="mod-tree_seach-button button">[[%modtree_chunk_search]]</button>
                     </div>
                 `]]
             </div>
-
+            [[-     hidden templates  ]]
             <div class="mod-tree__tree-templates hidden">
                 <ul>
                     [[+itemHiddenList]]
                     [[+itemHiddenTree]]
                 </ul>
                     [[+buttonHidden]]
-                [[-<button  class="mod-tree__paginate-button mod-tree__paginate-button-template"></button>]]
             </div>
         </div>
-        [[-          list after search of after page load         ]]
+        [[-          list after search or after page load         ]]
         <div class="mod-tree__panel">
             <ul  class="mod-tree__list [[+items:is=``:then=`hidden`]]"
                 data-limit="[[+limit]]"
@@ -67,10 +67,10 @@
                 <div class="mod-tree__content-content" id="modtree-content"></div>
             </div>
             <div class="mod-tree__content-image" >
-                <img id="modtree-image" src="" >
+                <img id="modtree-image" class="hidden" src="" />
             </div>
         </div>
-        <div class="mod-tree__content-uri"><a id="modtree-uri" href=""><span id="modtree-urltext"></span></a></div>
+        <div class="mod-tree__content-uri "><a id="modtree-uri" href="" class="hidden">[[%modtree_chunk_readmore]]</a></div>
     </div>
 </div>
 [[-         preloader        ]]
@@ -84,3 +84,4 @@
     <div class="f_circleG" id="frotateG_07"></div>
     <div class="f_circleG" id="frotateG_08"></div>
 </div>
+
