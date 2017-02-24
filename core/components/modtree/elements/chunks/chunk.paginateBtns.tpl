@@ -1,4 +1,4 @@
-<button  data-page="[[+page]]" class="mod-tree__paginate-button mod-tree__run-search floatingBarsG-wrapper [[+current:is=`1`:then=`current" disabled `:else=`"`]]>
+<button  data-page="[[+page]]" class="mod-tree__paginate-button mod-tree__run-search floatingBarsG-parent floatingBarsG-wrapper [[+current:is=`1`:then=`current" disabled `:else=`"`]]>
     <div class="floatingBarsG hidden">
         <div class="blockG  rotateG_01"></div>
         <div class="blockG  rotateG_02"></div>

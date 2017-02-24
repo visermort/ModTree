@@ -50,7 +50,7 @@
                 data-content-id-prefix="[[+contentIdPrefix]]">
                 [[+items]]
             </ul>
-            <div class="mod-tree__paginate floatingBarsG-parent [[+buttons:is=``:then=`hidden`]]">
+            <div class="mod-tree__paginate [[+buttons:is=``:then=`hidden`]]">
                 [[+buttons]]
             </div>
             <div class="mod-tree__search-result [[+limitList:is=`0`:or:if=`[[+pagination.countResult]]`:is=`0`:then=`hidden`]]">
@@ -71,7 +71,7 @@
         <h4 id="modtree-pagetitle" class="mod-tree__content-header"> </h4>
         <div class="mod-tree__content-description">
             <div class="mod-tree__content-publishedon" id="modtree-publishedon"></div>
-            <div class="mod-tree__content-introtext" id="modtree-intotext"></div>
+            <div class="mod-tree__content-introtext" id="modtree-introtext"></div>
         </div>
 
         <div class="mod-tree__content-contenttext">

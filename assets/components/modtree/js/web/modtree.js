@@ -82,7 +82,7 @@ function getItemChildData(element) {
 
 //при завершении запроса на дочерние ресурсы - создание дочерних узлов
 function makeChildNodes(element, data) {
-    console.log(data);
+   // console.log(data);
     if (data.items.length > 0) {
         var tree = getParentTargetElement(element, 'mod-tree__tree', true),
             hidden = document.getElementsByClassName('mod-tree__tree-templates')[0],
@@ -119,11 +119,11 @@ function searchResources(e) {
         fieldsDiv = getParentTargetElement(button, 'mod-tree__tree', true).getElementsByClassName('mod-tree__seach')[0],
         fields = fieldsDiv.getElementsByClassName('mod-tree__search-fields-item-field'),
         params = [];
-    console.log(fieldsDiv, fields);
+    //console.log(fieldsDiv, fields);
     Array.from(fields).forEach(function(field, key) {
         name = field.getAttribute('name');
         value = field.value;
-        console.log(name, value);
+        //console.log(name, value);
         if (value != "") {
             params.push({ name: name, value: value});
         }
@@ -143,21 +143,21 @@ function searchResources(e) {
                 '&id='+fieldsDiv.getAttribute('data-id'),
             url = 'modtreeajax.php',
             action = 'web/resource/getlist';
-        console.log(data, url, action);
+       // console.log(data, url, action);
         //делаем запрос
         httpRequest(button, url, action, data, makeSearchList);
 }
 
 //после поиска, отображение результатов
 function makeSearchList(element, data) {
-    console.log(data);
+    //console.log(data);
     var tree = getParentTargetElement(element, 'mod-tree__tree', false),
         hidden = document.getElementsByClassName('mod-tree__tree-templates')[0],
         liTemplate = hidden.getElementsByClassName('mod-tree__item-list')[0].cloneNode(true),
         ul = tree.getElementsByClassName('mod-tree__list')[0],
         paginate = tree.getElementsByClassName('mod-tree__paginate')[0],
         searchResult = tree.getElementsByClassName('mod-tree__search-result')[0];
-    console.log(element, liTemplate, ul);
+    //console.log(element, liTemplate, ul);
     ul.innerHTML = '';
     paginate.innerHTML = '';
     if (data.items.length > 0) {
@@ -172,10 +172,10 @@ function makeSearchList(element, data) {
             liNew.getElementsByClassName('mod-tree__item-icon')[0].onclick = iconClick;
             liNew.getElementsByClassName('mod-tree__item-title')[0].onclick = titleClick;
         });
-        console.log('buttons');
+        //console.log('buttons');
         if (data.pagination.buttons != null && data.pagination.buttons.length > 1) {
             data.pagination.buttons.forEach(function(item, index){
-                console.log('button',item);
+                //console.log('button',item);
                 var button = hidden.getElementsByClassName('mod-tree__paginate-button')[0].cloneNode(true);
                 button.classList.remove('mod-tree__paginate-button-template');
                 button.classList.remove('hidden');
@@ -225,12 +225,12 @@ function httpRequest(element, url, action, data, onLoad){
 //        preloader.style.display = 'none';
         showPreloader(preloaderWrapper, preloader, false);
         var response = xhr.response;
-        console.log(response);
+        //console.log(response);
         if (response.object != null) {
             //получили данные, вызываем функцию
             onLoad(element, response.object);
         } else {
-            console.log(response);
+            //console.log(response);
         }
     };
 }
@@ -240,6 +240,9 @@ function httpRequest(element, url, action, data, onLoad){
 function getPreloaderWrapper(element) {
     var parent = getParentTargetElement(element, 'floatingBarsG-parent', true);
     if (parent) {
+        if (parent.classList.contains('floatingBarsG-wrapper')) {
+            return parent;
+        }
         wrapper = parent.getElementsByClassName('floatingBarsG-wrapper')[0];
     }
     return wrapper;
