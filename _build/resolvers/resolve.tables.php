@@ -8,8 +8,11 @@ if ($transport->xpdo) {
     switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         case xPDOTransport::ACTION_INSTALL:
         case xPDOTransport::ACTION_UPGRADE:
-            $modelPath = $modx->getOption('modtree_core_path', null,
-                    $modx->getOption('core_path') . 'components/modtree/') . 'model/';
+            $modelPath = $modx->getOption(
+                'modtree_core_path',
+                null,
+                $modx->getOption('core_path') . 'components/modtree/'
+            ) . 'model/';
             $modx->addPackage('modtree', $modelPath);
 
             $manager = $modx->getManager();
@@ -25,6 +28,7 @@ if ($transport->xpdo) {
                 unset($schema);
             }
             foreach ($objects as $tmp) {
+                $modx->log(modX::LOG_LEVEL_INFO, 'table '.$tmp);
                 $table = $modx->getTableName($tmp);
                 $sql = "SHOW TABLES LIKE '" . trim($table, '`') . "'";
                 $stmt = $modx->prepare($sql);
@@ -79,6 +83,7 @@ if ($transport->xpdo) {
             break;
 
         case xPDOTransport::ACTION_UNINSTALL:
+            $modx->removeExtensionPackage('modtree');
             break;
     }
 }

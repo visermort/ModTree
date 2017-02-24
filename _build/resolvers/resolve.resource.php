@@ -5,7 +5,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         $resource = $modx->getObject('modResource', ['pagetitle' => 'modtree_resource']);
         if ($resource == null) {
                 $resource = $modx->newObject('modResource');
-                $modx->log(modX::LOG_LEVEL_INFO, 'Создаём новый ресурс modtreeajax.php');
+                $modx->log(modX::LOG_LEVEL_INFO, 'Create new resource modtreeajax.php');
         }
         $resource->set('alias', 'modtreeajax');
         $resource->set('uri', 'modtreeajax.php');
@@ -18,15 +18,17 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         $resource->set('show_in_tree', 0);
         $resource->setContent('[[!modTreeAjax]]');
         $resource->save();
-        $modx->log(modX::LOG_LEVEL_INFO, 'Сохранение modtreeajax.php');
+        $modx->log(modX::LOG_LEVEL_INFO, 'Save modtreeajax.php');
         break;
 
     case xPDOTransport::ACTION_UNINSTALL:
-//        $resource = $modx->getObject('modResource', ['pagetitle' => 'modtree_resource']);
-//        if ($resource != null) {
-//            $resource->delete();
-//            $modx->log(modX::LOG_LEVEL_INFO, 'Удалён ресурс modtreeajax.php');
-//        }
+        $query = $modx->newQuery('modResource');
+        $query->command('delete');
+        $query->where(['padetitle' => 'modtree_resource']);
+        $query->prepare();
+        $query->stmt->execute();
+        $modx->log(modX::LOG_LEVEL_INFO, 'Delete resource modtreeajax.php');
+
         break;
 }
 
