@@ -209,7 +209,8 @@ function httpRequest(element, url, action, data, onLoad){
     //var preloaderWrapper = getParentTargetElement(element, 'floatingBarsG-wrapper', true);
     var preloaderWrapper = getPreloaderWrapper(element);
     if (preloaderWrapper) {
-        var preloader = preloaderWrapper.getElementsByClassName('floatingBarsG')[0];
+       // var preloader = preloaderWrapper.getElementsByClassName('floatingBarsG')[0];
+        var preloader = preloaderWrapper.getElementsByClassName('preloader-gif')[0];
     }
     xhr = new XMLHttpRequest();
     xhr.open('POST', url);
@@ -230,7 +231,7 @@ function httpRequest(element, url, action, data, onLoad){
             //получили данные, вызываем функцию
             onLoad(element, response.object);
         } else {
-            //console.log(response);
+            console.log(response);
         }
     };
 }
@@ -238,12 +239,12 @@ function httpRequest(element, url, action, data, onLoad){
 //вспомогательное
 //находим обёртку прелоудера - рядом с элементом
 function getPreloaderWrapper(element) {
-    var parent = getParentTargetElement(element, 'floatingBarsG-parent', true);
+    var parent = getParentTargetElement(element, 'preloader-parent', true);
     if (parent) {
-        if (parent.classList.contains('floatingBarsG-wrapper')) {
+        if (parent.classList.contains('preloader-wrapper')) {
             return parent;
         }
-        wrapper = parent.getElementsByClassName('floatingBarsG-wrapper')[0];
+        wrapper = parent.getElementsByClassName('preloader-wrapper')[0];
     }
     return wrapper;
 }

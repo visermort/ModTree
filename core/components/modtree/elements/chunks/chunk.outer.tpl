@@ -10,22 +10,13 @@
                 data-sortdir="[[+sortDir]]"
                 data-paginate-list="[[+paginateList]]"
                 data-query-links="[[+queryLinks]]"
-               >
+            >
                 [[-   search fields    ]]
                 [[+searchfields:ne=``:then=`
                     <ul class="mod-tree__seach-fields">[[+searchfields]]</ul>
-                    <div class="mod-tree_seach-buttons floatingBarsG-parent">
-                        <button data-page="0" class="mod-tree_seach-button mod-tree__run-search button floatingBarsG-wrapper">
-                            <div class="floatingBarsG hidden">
-                                <div class="blockG  rotateG_01"></div>
-                                <div class="blockG  rotateG_02"></div>
-                                <div class="blockG  rotateG_03"></div>
-                                <div class="blockG  rotateG_04"></div>
-                                <div class="blockG  rotateG_05"></div>
-                                <div class="blockG  rotateG_06"></div>
-                                <div class="blockG  rotateG_07"></div>
-                                <div class="blockG  rotateG_08"></div>
-                            </div>
+                    <div class="mod-tree_seach-buttons preloader-parent">
+                        <button data-page="0" class="mod-tree_seach-button mod-tree__run-search button preloader-wrapper">
+                                <img class="mod-tree_seach-button-preloader preloader-gif hidden" src="/assets/components/modtree/img/loader.gif" alt="">
                             [[%modtree_chunk_search]]
                         </button>
                     </div>
@@ -54,13 +45,13 @@
                 [[+buttons]]
             </div>
             <div class="mod-tree__search-result [[+limitList:is=`0`:or:if=`[[+pagination.countResult]]`:is=`0`:then=`hidden`]]">
-                Записей
+                [[%modtree_chunk_record]]
                 <span data-name="countResult"> [[+pagination.countResult]] </span>
-                из
+                [[%modtree_chunk_from]]
                 <span data-name="count"> [[+pagination.count]] </span>
-                .Страница
+                .[[%modtree_chunk_page]]
                 <span data-name="page"> [[+pagination.page]] </span>
-                из
+                [[%modtree_chunk_from]]
                 <span data-name="pages"> [[+pagination.pages]]</span>
             </div>
         </div>
@@ -79,7 +70,7 @@
                 <div class="mod-tree__content-content" id="modtree-content"></div>
             </div>
             <div class="mod-tree__content-image" >
-                <img id="modtree-image" class="hidden" src="" />
+                <img id="modtree-image" class="hidden mod-tree__content-image" src="" />
             </div>
         </div>
         <div class="mod-tree__content-uri "><a id="modtree-uri" href="" class="hidden">[[%modtree_chunk_readmore]]</a></div>

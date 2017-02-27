@@ -105,6 +105,11 @@ class modTreeResourceGetProcessor extends  modProcessor
         } else {
             $resourceArray['publishedon'] = '';
         }
+        if (!empty($resourceArray) && $resourceArray['linkdate'] != '0000-00-00 00:00:00') {
+            $resourceArray['linkdate'] = date($format, strtotime($resourceArray['linkdate']));
+        } else {
+            $resourceArray['linkdate'] = '';
+        }
     }
 
     private function makePaginate($page, $pages, $paginateList)

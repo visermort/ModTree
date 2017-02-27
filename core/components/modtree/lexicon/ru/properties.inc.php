@@ -9,3 +9,6 @@ $_lang['modtree_prop_toPlaceholder'] = 'Усли указан этот пара�
 
 $_lang['modtree_chunk_search'] = 'Поиск';
 $_lang['modtree_chunk_readmore'] = 'Подробнее';
+$_lang['modtree_chunk_page'] = 'Страниц';
+$_lang['modtree_chunk_from'] = 'из';
+$_lang['modtree_chunk_record'] = 'Документов';

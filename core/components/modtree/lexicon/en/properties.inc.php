@@ -9,3 +9,6 @@ $_lang['modtree_prop_toPlaceholder'] = 'If set, will output the content to the p
 
 $_lang['modtree_chunk_search'] = 'Search';
 $_lang['modtree_chunk_readmore'] = 'read more';
+$_lang['modtree_chunk_page'] = 'Page';
+$_lang['modtree_chunk_from'] = 'from';
+$_lang['modtree_chunk_record'] = 'Documents';

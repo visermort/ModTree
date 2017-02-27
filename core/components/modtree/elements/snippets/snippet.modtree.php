@@ -28,7 +28,7 @@ $parent = $modx->getOption('parent', $scriptProperties, $modx->resource->get('id
 //делать ли поиск сразу  - если поиск связей, то 1
 //делать ли поиск сразу  - если поиск связей, то 1
 $queryForce = $modx->getOption('queryForce', $scriptProperties, '1');
-//направление связи: 0 - в обе стороны, 1 - master->slave, 0 - slave->master
+//направление связи: 0 - в обе стороны, 1 - master->slave, -1 - slave->master
 $linkWay = $modx->getOption('linkWay', $scriptProperties, 0);
 //вид кнопок пагинации - пока только список
 $paginateList = $modx->getOption('paginateList', $scriptProperties, 0);
