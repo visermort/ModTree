@@ -4,9 +4,9 @@ With this component, you can link resources of your site with each other and sho
 
 Make links between resources on admin custom manager page.
 
->![Making link on CMP](source/readme/modtree.jpg)
+![Making link on CMP](source/readme/modtree.jpg)
 
->Start seach when the page loads:
+Start seach when the page loads:
 >&queryLinks=`1` (default) - linked resources,
 >&queryLinks=`0` - child resources for &parent (default current page).
 
@@ -14,7 +14,7 @@ Then, when you click on the resources icons, searches for related resources of t
 
 When you click on resource the resource content is displayed.
 
->![Result view on page](source/readme/screen.png)
+![Result view on page](source/readme/screen.png)
 
 See result on [live demo](http://modtree.visermort.ru/examples.html)
 
@@ -76,4 +76,4 @@ Display related resources of resource 15.
 | **&linkWay**          | 0                           | Link direction. `1` - master to slave. `-1` - slave to master. `0` - both way |
 | **&searchFields**     | padetitle,content           | Search fields. String with comma separator. To disable - &searchFields=``   |
 
->![Logo](source/readme/logo320.png)
+![Logo](source/readme/logo320.png)
