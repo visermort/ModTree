@@ -1,24 +1,20 @@
 ##ModTree
 
->![Logo](source/readme/logo320.png)
-
 With this component, you can link resources of your site with each other and show them on page as a tree.
 
 Make links between resources on admin custom manager page.
 
 >![Making link on CMP](source/readme/modtree.jpg)
 
-See result on [live demo][1].
-
-When the page loads performed start search:
-&queryLinks=`1` (default) - linked resources,
-&queryLinks=`0` - child resources for &parent (default current page).
+>Start seach when the page loads:
+>&queryLinks=`1` (default) - linked resources,
+>&queryLinks=`0` - child resources for &parent (default current page).
 
 Then, when you click on the resources icons, searches for related resources of them.
 
 When you click on resource the resource content is displayed.
 
->![Result view on page](source/readme/screen.jpg)
+>![Result view on page](source/readme/screen.png)
 
 See result on [live demo](http://modtree.visermort.ru/examples.html)
 
@@ -79,3 +75,5 @@ Display related resources of resource 15.
 | **&queryForce**       | 1                           | Determines whether to perform a start search. `1` - do start search, `0` - search only on search button click |
 | **&linkWay**          | 0                           | Link direction. `1` - master to slave. `-1` - slave to master. `0` - both way |
 | **&searchFields**     | padetitle,content           | Search fields. String with comma separator. To disable - &searchFields=``   |
+
+>![Logo](source/readme/logo320.png)
