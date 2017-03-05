@@ -3,11 +3,11 @@ modTree.combo.resourceCombo = function(config) {
     Ext.applyIf(config,{
         name: 'slave'
         ,hiddenName: 'slave'
-        ,displayField: 'pagetitle'
+        ,displayField: 'pagetitle2'
         ,valueField: 'id'
         ,url: modTree.config.connectorUrl
         ,baseParams: { action: 'mgr/resources/getlist' }
-        ,fields: ['id','pagetitle']
+        ,fields: ['id','pagetitle2']
         ,pageSize: 20
         ,typeAhead: true
         ,editable: true

@@ -3,8 +3,8 @@
 class modTreeResourceGetProcessor extends  modProcessor
 {
 
-    private $queryText;
-    private $queryCountText;
+   // private $queryText;
+   // private $queryCountText;
 
     public function checkPermissions()
     {
@@ -52,10 +52,10 @@ class modTreeResourceGetProcessor extends  modProcessor
                 'pages' => $pages,
                 'offset' => $offset,
                 'buttons' => $this->makePaginate($page, $pages, $paginateList),
-                'searchParams' => $searchParams,
-                'queryText' => $this->queryText,
-                'queryCountText' => $this->queryCountText,
-                'queryLinks' => $queryLinks,
+                //'searchParams' => $searchParams,
+                //'queryText' => $this->queryText,
+                //'queryCountText' => $this->queryCountText,
+                //'queryLinks' => $queryLinks,
             ],
             'items' => $resMaster,
         ]);
@@ -152,15 +152,15 @@ class modTreeResourceGetProcessor extends  modProcessor
             if ($linkWay > 0) {
                 $sql = 'select mr.id from ' . $resources . ' mr INNER JOIN ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1';
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1 and `mt`.`active` = 1 ';
             } elseif ($linkWay < 0) {
                 $sql = 'select mr.id from ' .  $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1';
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1 and `mt`.`active` = 1 ';
             } else {
                 $sql = 'select mr.id from ' . $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where '.
-                    ' `master` = :id  and `published` = 1 and `deleted` = 0  and `searchable` = 1 ';
+                    ' `master` = :id  and `published` = 1 and `deleted` = 0  and `searchable` = 1 and `mt`.`active` = 1 ';
                 if (isset($searchParams)) {
                     foreach ($searchParams as $searchParam) {
                         $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
@@ -168,7 +168,7 @@ class modTreeResourceGetProcessor extends  modProcessor
                 }
                 $sql .='union select mr.id from ' .
                     $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where '.
-                    ' `slave` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1';
+                    ' `slave` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1 and `mt`.`active` = 1 ';
             }
             if (isset($searchParams)) {
                 foreach ($searchParams as $searchParam) {
@@ -180,15 +180,15 @@ class modTreeResourceGetProcessor extends  modProcessor
             if ($linkWay > 0) {
                 $sql = 'SELECT mr.*,mt.linkdate,mt.linktitle,mt.linktext FROM ' . $resources . ' mr INNER JOIN ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 ';
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `mt`.`active` = 1 ';
             } elseif ($linkWay < 0) {
                 $sql = 'select mr.*,mt.linkdate,mt.linktitle,mt.linktext from ' . $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where '.
-                    ' `slave` = :id and `published` = 1 and `deleted` = 0 ';
+                    ' `slave` = :id and `published` = 1 and `deleted` = 0 and `mt`.`active` = 1 ';
             } else {
                 $sql = 'select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' . $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 ';
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `mt`.`active` = 1 ';
                 if (isset($searchParams)) {
                     foreach ($searchParams as $searchParam) {
                         $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
@@ -196,7 +196,7 @@ class modTreeResourceGetProcessor extends  modProcessor
                 }
                 $sql .= 'union select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' .
                     $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where '.
-                    ' `slave` = :id and `published` = 1 and `deleted` = 0 ';
+                    ' `slave` = :id and `published` = 1 and `deleted` = 0 and `mt`.`active` = 1 ';
             }
             if (isset($searchParams)) {
                 foreach ($searchParams as $searchParam) {
@@ -209,11 +209,11 @@ class modTreeResourceGetProcessor extends  modProcessor
             }
         }
         //для отладки запросы
-        if ($count) {
-            $this->queryCountText = $sql;
-        } else {
-            $this->queryText = $sql;
-        }
+//        if ($count) {
+//            $this->queryCountText = $sql;
+//        } else {
+//            $this->queryText = $sql;
+//        }
         $query = $this->modx->prepare($sql);
         $query->bindParam(':id', $parent);
         $query->execute();

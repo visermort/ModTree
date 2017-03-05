@@ -24,6 +24,21 @@ class modTreeResourcesGetListProcessor extends modObjectGetListProcessor
         return true;
     }
 
+    /**
+     * @param xPDOObject $object
+     *
+     * @return array
+     */
+    public function prepareRow(xPDOObject $object)
+    {
+        $array = $object->toArray();
+        $array['pagetitle2'] = $array['pagetitle'].' ('.$array['id'].')';
+        if ($array['pagetitle'] == 'modtree_resource') {
+            return null;
+        }
+        return $array;
+    }
+
 }
 
 return 'modTreeResourcesGetListProcessor';

@@ -182,7 +182,7 @@ Ext.extend(modTree.grid.Items, MODx.grid.Grid, {
     },
 
     getFields: function () {
-        return ['id', 'linkdate', 'linktitle', 'linktext', 'active', 'actions', 'masterPagetitle', 'slavePagetitle'];
+        return ['id', 'linkdate', 'linktitle', 'linktext', 'active', 'actions', 'masterPagetitle', 'slavePagetitle', 'linkdate2'];
     },
 
     getColumns: function () {
@@ -204,8 +204,9 @@ Ext.extend(modTree.grid.Items, MODx.grid.Grid, {
         }
         ,  {
             header: _('modtree_item_linkdate'),
-            dataIndex: 'linkdate',
-            renderer: Ext.util.Format.dateRenderer('d.m.Y H:i'),
+            dataIndex: 'linkdate2',
+            //renderer: Ext.util.Format.dateRenderer('d.m.Y H:i'),
+            renderer: Ext.util.Format.dateRenderer(MODx.config.manager_date_format + ' ' + MODx.config.manager_time_format),
             sortable: true,
             width: 70
         }

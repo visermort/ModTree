@@ -57,6 +57,7 @@ class modTreeItemGetListProcessor extends modObjectGetListProcessor
                 ->get('pagetitle').' ('.$array['master'].')';
         $array['slavePagetitle'] = $this->modx->getObject('modResource', $array['slave'])
                 ->get('pagetitle').' ('.$array['slave'].')';
+        $array['linkdate2'] = $array['linkdate'] > 0 ? $array['linkdate'] : '';
 
         // Edit
         $array['actions'][] = array(
