@@ -7,7 +7,7 @@ Make links between resources on admin custom manager page.
 ![Making link on CMP](source/readme/modtree.jpg)
 
 Start seach when the page loads:
->&queryLinks=`1` (default) - linked resources &parent (default current page),
+>&queryLinks=`1` (default) - linked resources for &parent (default - current page),
 
 >&queryLinks=`0` - child resources for &parent.
 
