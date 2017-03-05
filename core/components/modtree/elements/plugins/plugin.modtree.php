@@ -5,8 +5,8 @@ if ($modx->event->name = 'OnDocFormDelete') {
     //$id передаётся
     $query = $modx->newQuery('modTreeItem');
     $query->command('delete');
-    $query->where(array('master' => $id));
-    $query->orCondition(array('slave' => $id));
+    $query->where(['master' => $id]);
+    $query->orCondition(['slave' => $id]);
 
     $query->prepare();
 

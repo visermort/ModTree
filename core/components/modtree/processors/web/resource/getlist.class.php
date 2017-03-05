@@ -23,37 +23,12 @@ class modTreeResourceGetProcessor extends  modProcessor
         $queryLinks = $this->getProperty('queryLinks');
         $linkWay = $this->getProperty('linkWay');
 
-
-        //$page = 2;
-        //$limit = 2;
-
         $offset = ($limit == 0 || $page < 2)? 0 : $limit * ($page - 1);
-        // Build queryes
 
-
-//        $query = $this->modx->newQuery('modResource');
-//        $queryCount = $this->modx->newQuery('modResource');
-//        $query->select(['modResource.*']);
-//        $queryCount->select(['count(*)']);
-//
-//        $query->where(['published'=> 1, 'deleted' => 0,]);
-//        $queryCount->where(['published'=> 1, 'deleted' => 0,]);
-//        if ($parent) {
-//            $query->where(['parent'=> $parent]);
-//            $queryCount->where(['parent'=> $parent]);
-//        }
-//        foreach ($searchParams as $searchParam) {
-//            $query->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
-//            $queryCount->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
-//        }
-//        $query->sortby($sortBy, $sortDir);
-//        if ($limit > 0) {
-//            $query->limit($limit, $offset);
-//        }
         if ($queryLinks > 0) {
             //ищем связанные ресурсы
-            $resMaster = $this->makeQueryLinks($id, $linkWay, $limit, $offset, $sortBy, $sortDir, false);
-            $count = $this->makeQueryLinks($id, $linkWay, $limit, $offset, $sortBy, $sortDir, true);
+            $resMaster = $this->makeQueryLinks($searchParams, $id, $linkWay, $limit, $offset, $sortBy, $sortDir, false);
+            $count = $this->makeQueryLinks($searchParams, $id, $linkWay, $limit, $offset, $sortBy, $sortDir, true);
         } else {
             //ищем просто ресурсы
             $resMaster = $this->makeQueryResource($searchParams, $id, $limit, $offset, $sortBy, $sortDir, false);
@@ -142,7 +117,7 @@ class modTreeResourceGetProcessor extends  modProcessor
             $query->select(['count(*)']);
         }
 
-        $query->where(['published'=> 1, 'deleted' => 0,]);
+        $query->where(['published'=> 1, 'deleted' => 0, 'searchable' => 1]);
         if ($parent) {
             $query->where(['parent'=> $parent]);
         }
@@ -169,7 +144,7 @@ class modTreeResourceGetProcessor extends  modProcessor
     }
 
 
-    private function makeQueryLinks($parent, $linkWay, $limit, $offset, $sortBy, $sortDir, $count)
+    private function makeQueryLinks($searchParams, $parent, $linkWay, $limit, $offset, $sortBy, $sortDir, $count)
     {
         $resources = $this->modx->getTableName('modResource');
         $treeItems = $this->modx->getTableName('modTreeItem');
@@ -177,18 +152,28 @@ class modTreeResourceGetProcessor extends  modProcessor
             if ($linkWay > 0) {
                 $sql = 'select mr.id from ' . $resources . ' mr INNER JOIN ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 ';
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1';
             } elseif ($linkWay < 0) {
                 $sql = 'select mr.id from ' .  $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 ';
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1';
             } else {
                 $sql = 'select mr.id from ' . $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where '.
-                    ' `master` = :id  and `published` = 1 and `deleted` = 0 union'.
-                    ' select mr.id from ' .
+                    ' `master` = :id  and `published` = 1 and `deleted` = 0  and `searchable` = 1 ';
+                if (isset($searchParams)) {
+                    foreach ($searchParams as $searchParam) {
+                        $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
+                    }
+                }
+                $sql .='union select mr.id from ' .
                     $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where '.
-                    ' `slave` = :id and `published` = 1 and `deleted` = 0 ';
+                    ' `slave` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1';
+            }
+            if (isset($searchParams)) {
+                foreach ($searchParams as $searchParam) {
+                    $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
+                }
             }
             $sql = 'select count(*) from (' . $sql . ') as tt';
         } else {
@@ -203,17 +188,27 @@ class modTreeResourceGetProcessor extends  modProcessor
             } else {
                 $sql = 'select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' . $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 union'.
-                    ' select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' .
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 ';
+                if (isset($searchParams)) {
+                    foreach ($searchParams as $searchParam) {
+                        $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
+                    }
+                }
+                $sql .= 'union select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' .
                     $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where '.
                     ' `slave` = :id and `published` = 1 and `deleted` = 0 ';
             }
-
+            if (isset($searchParams)) {
+                foreach ($searchParams as $searchParam) {
+                    $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
+                }
+            }
             $sql .= 'order by `' . $sortBy .'` ' .$sortDir;
             if ($limit) {
                 $sql .= ' limit '.$offset.','.$limit;
             }
         }
+        //для отладки запросы
         if ($count) {
             $this->queryCountText = $sql;
         } else {
@@ -223,11 +218,9 @@ class modTreeResourceGetProcessor extends  modProcessor
         $query->bindParam(':id', $parent);
         $query->execute();
         if ($count) {
-            //$this->queryCountText = $query->toSQL(true);
             return (int) $query->fetchColumn();
         } else {
-           // $this->queryText = $query->toSQL(true);
-            return $query->fetchAll(PDO::FETCH_ASSOC);
+             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 }

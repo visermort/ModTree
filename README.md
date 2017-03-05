@@ -1,57 +1,81 @@
-## modTree
+##ModTree
 
-modTree is a base Extra template that is useful when wanting to create a new
-Extra for MODx Revolution. One can git archive from this repository to start
-with all the file structure for beginning MODx Extra development pre-setup.
+>![Logo](source/readme/logo320.png)
 
-## How to Export
+With this component, you can link resources of your site with each other and show them on page as a tree.
 
-First, clone this repository somewhere on your development machine:
+Make links between resources on admin custom manager page.
 
-`git clone http://github.com/bezumkin/modTree.git ./`
+>![Making link on CMP](source/readme/modtree.jpg)
 
-Then, create the target directory where you want to create the file.
+See result on [live demo][1].
 
-Then, navigate to the directory modTree is now in, and do this:
+When the page loads performed start search:
+&queryLinks=`1` (default) - linked resources,
+&queryLinks=`0` - child resources for &parent (default current page).
 
-`git archive HEAD | (cd /path/where/I/want/my/new/repo/ && tar -xvf -)`
+Then, when you click on the resources icons, searches for related resources of them.
 
-(Windows users can just do git archive HEAD and extract the tar file to wherever
-they want.)
+When you click on resource the resource content is displayed.
 
-Then you can git init or whatever in that directory, and your files will be located
-there!
+>![Result view on page](source/readme/screen.jpg)
 
-## Configuration
+See result on [live demo](http://modtree.visermort.ru/examples.html)
 
-Now, you'll want to change references to modTree in the files in your
-new copied-from-modTree repo to whatever name of your new Extra will be. Once
-you've done that, you can create some System Settings:
+[Install](http://modtree.visermort.ru/install.html)
 
-- 'mynamespace.core_path' - Point to /path/to/my/extra/core/components/extra/
-- 'mynamespace.assets_url' - /path/to/my/extra/assets/components/extra/
+Uses AJAX. JQuery not required.
 
-Then clear the cache. This will tell the Extra to look for the files located
-in these directories, allowing you to develop outside of the MODx webroot!
+### Examples:
 
-## Information
+#####Display child resources
 
-Note that if you git archive from this repository, you may not need all of its
-functionality. This Extra contains files and the setup to do the following:
+&queryLinks=`0`. Display child resources of resource 7 instead of related.
 
-- Integrates a custom table of "Items"
-- A snippet listing Items sorted by name and templated with a chunk
-- A custom manager page to manage Items on
+```
+[[modTree?
+    &parent=`7`
+    &limitList=`5`
+    &queryLinks=`0`
+    ]]
+```
 
-If you do not require all of this functionality, simply remove it and change the
-appropriate code.
+#####Display linked resources
 
-Also, you'll want to change all the references of 'modTree' to whatever the
-name of your component is.
+Display related resources of resource 15.
 
-## Copyright Information
+```
+[[modTree?
+    &parent=`15`
+    &limitList=`5`
+    ]]
+```
 
-modTree is distributed as GPL (as MODx Revolution is), but the copyright owner
-(Shaun McCormick) grants all users of modTree the ability to modify, distribute
-and use modTree in MODx development as they see fit, as long as attribution
-is given somewhere in the distributed source of all derivative works.
+###Snippet parameters
+
+#####Result parameters
+
+| Name                  | Default                     | Description                                                                                     |
+| --------------------- | ------------------------------------------------- | ------------------------------------------------------------------------- |
+| **&tplOuter**         | tpl.ModTree.outer           | Main template            |
+| **&tplList**          | tpl.ModTree.itemList        | Template for start items |
+| **&tplTree**          | tpl.ModTree.itemTree        | Template for childs branches on tree |
+| **&tplSearchField**   | tpl.ModTree.itemSearchField | Template for search fields |
+| **&tplButtons**       | tpl.ModTree.paginateBtns    | Template for paginate buttons |
+| **&sortBy**           | menuindex                   |  |
+| **&sortDir**          | ASC                         |  |
+| **&limit**            | 0                           | Limit on tree for child branches |
+| **&limitList**        | 15                          | Limit for start search  |
+| **&contentIdPrefix**  | modtree-                    | Prefix of ID for content fields. In case using two or more snippet on page you must use other &tplOuter with other $contentIdPrefix. Fields can be placed anywhere on the page, even outside of the &tplOuter |
+| **&customCss**        | 0                           | 1 - not linked component CSS. If you use your own styles you may disable component CSS |
+
+
+#####Search parameters
+
+| Name                  | Default                     | Description                                                                                     |
+| --------------------- | ------------------------------------------------- | ------------------------------------------------------------------------- |
+| **&queryLinks**       | 1                           | Determines the start search. `1` - related resources. `0` - child resources. If `0` - search fields are displayed as default |
+| **&parent**           | curren resource             | Resource for start search |
+| **&queryForce**       | 1                           | Determines whether to perform a start search. `1` - do start search, `0` - search only on search button click |
+| **&linkWay**          | 0                           | Link direction. `1` - master to slave. `-1` - slave to master. `0` - both way |
+| **&searchFields**     | padetitle,content           | Search fields. String with comma separator. To disable - &searchFields=``   |

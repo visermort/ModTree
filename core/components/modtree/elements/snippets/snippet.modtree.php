@@ -36,13 +36,22 @@ $paginateList = $modx->getOption('paginateList', $scriptProperties, 0);
 $contentIdPrefix = $modx->getOption('contentIdPrefix', $scriptProperties, 'modtree-');
 //поля поиска
 $searchFields = explode(',', $modx->getOption('searchFields', $scriptProperties, 'padetitle, content'));
+//подключать ли встроенный CSS
+$customCss = $modx->getOption('customCss', $scriptProperties, 0);
+
+//подключаем css
+if (!$customCss) {
+    $modx->regClientCSS('/assets/components/modtree/css/web/modtree.css');
+}
+//подключаем скрипт
+$modx->regClientScript('/assets/components/modtree/js/web/modtree.js');
 
 //если ищем связи, то поиск сразу, поля для поиска очищаем
-if ($queryLinks == 1) {
+//if ($queryLinks == 1) {
    // $parent = $parent ? $parent : $modx->resource->get('id');
-    $queryForce = 1;
-    $searchFields = [];
-}
+   // $queryForce = 1;
+   // $searchFields = [];
+//}
 
 $items = '';
 $buttons = '';

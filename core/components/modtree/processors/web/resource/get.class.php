@@ -34,11 +34,11 @@ class modTreeResourceGetProcessor extends  modProcessor
         }
         $this->formatDates($object);
 
-        return $this->success('',$object);
-
+        return $this->success('', $object);
     }
 
-    private function formatDates(array &$resourceArray) {
+    private function formatDates(array &$resourceArray)
+    {
         $format = $this->modx->getOption('modtree_date_format') .' '. $this->modx->getOption('modtree_time_format');
 
         if (!empty($resourceArray['pub_date']) && $resourceArray['pub_date'] != '0000-00-00 00:00:00') {

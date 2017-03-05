@@ -40,8 +40,6 @@ function iconClick(e) {
 function titleClick(e) {
     var element = getParentTargetElement(e.target, 'mod-tree__item-title', true),
         li = getParentTargetElement(element, 'mod-tree__item', false),
-        //ul  = parent.parentElement,
-        //url = ul.getAttribute('data-url'),
         url = 'modtreeajax.php',
         data = 'id='+li.getAttribute('data-id')+
             '&cts=web'+
@@ -66,7 +64,6 @@ function showObject(element, data) {
 function getItemChildData(element) {
     var li = getParentTargetElement(element ,'mod-tree__item', true),
         ul  = getParentTargetElement(li, 'mod-tree__list', false),
-//        url = ul.getAttribute('data-url'),
         url = 'modtreeajax.php',
         data = 'id='+li.getAttribute('data-id')+
             '&limit='+ul.getAttribute('data-limit')+
@@ -82,7 +79,6 @@ function getItemChildData(element) {
 
 //при завершении запроса на дочерние ресурсы - создание дочерних узлов
 function makeChildNodes(element, data) {
-   // console.log(data);
     if (data.items.length > 0) {
         var tree = getParentTargetElement(element, 'mod-tree__tree', true),
             hidden = document.getElementsByClassName('mod-tree__tree-templates')[0],
@@ -90,7 +86,6 @@ function makeChildNodes(element, data) {
             ul  = getParentTargetElement(li, 'mod-tree__list', false),
             ulNew = ul.cloneNode(true),
             liTemplate = hidden.getElementsByClassName('mod-tree__item-tree')[0],//.cloneNode(true),
-            //liTemplate = parent.cloneNode(true),
             content = li.getElementsByClassName('mod-tree__item-content');
         ulNew.innerHTML = '';
         liTemplate.getElementsByClassName('mod-tree__item-title')[0].classList.remove('active');
@@ -119,7 +114,6 @@ function searchResources(e) {
         fieldsDiv = getParentTargetElement(button, 'mod-tree__tree', true).getElementsByClassName('mod-tree__seach')[0],
         fields = fieldsDiv.getElementsByClassName('mod-tree__search-fields-item-field'),
         params = [];
-    //console.log(fieldsDiv, fields);
     Array.from(fields).forEach(function(field, key) {
         name = field.getAttribute('name');
         value = field.value;
@@ -128,9 +122,6 @@ function searchResources(e) {
             params.push({ name: name, value: value});
         }
     });
-    //console.log(params);
-    //console.log(JSON.stringify(params));
-   // console.log(params.toJSON());
         var data = '&limit='+fieldsDiv.getAttribute('data-limit')+
                 '&sortBy='+fieldsDiv.getAttribute('data-sortby')+
                 '&sortDir='+fieldsDiv.getAttribute('data-sortDir')+
@@ -143,21 +134,17 @@ function searchResources(e) {
                 '&id='+fieldsDiv.getAttribute('data-id'),
             url = 'modtreeajax.php',
             action = 'web/resource/getlist';
-       // console.log(data, url, action);
-        //делаем запрос
         httpRequest(button, url, action, data, makeSearchList);
 }
 
 //после поиска, отображение результатов
 function makeSearchList(element, data) {
-    //console.log(data);
     var tree = getParentTargetElement(element, 'mod-tree__tree', false),
         hidden = document.getElementsByClassName('mod-tree__tree-templates')[0],
         liTemplate = hidden.getElementsByClassName('mod-tree__item-list')[0].cloneNode(true),
         ul = tree.getElementsByClassName('mod-tree__list')[0],
         paginate = tree.getElementsByClassName('mod-tree__paginate')[0],
         searchResult = tree.getElementsByClassName('mod-tree__search-result')[0];
-    //console.log(element, liTemplate, ul);
     ul.innerHTML = '';
     paginate.innerHTML = '';
     if (data.items.length > 0) {
@@ -172,7 +159,6 @@ function makeSearchList(element, data) {
             liNew.getElementsByClassName('mod-tree__item-icon')[0].onclick = iconClick;
             liNew.getElementsByClassName('mod-tree__item-title')[0].onclick = titleClick;
         });
-        //console.log('buttons');
         if (data.pagination.buttons != null && data.pagination.buttons.length > 1) {
             data.pagination.buttons.forEach(function(item, index){
                 //console.log('button',item);
@@ -205,11 +191,8 @@ function makeSearchList(element, data) {
 
 //айакс - запрос - общий
 function httpRequest(element, url, action, data, onLoad){
-    //var preloader = document.getElementById('floatingCirclesG');
-    //var preloaderWrapper = getParentTargetElement(element, 'floatingBarsG-wrapper', true);
     var preloaderWrapper = getPreloaderWrapper(element);
     if (preloaderWrapper) {
-       // var preloader = preloaderWrapper.getElementsByClassName('floatingBarsG')[0];
         var preloader = preloaderWrapper.getElementsByClassName('preloader-gif')[0];
     }
     xhr = new XMLHttpRequest();
@@ -223,7 +206,6 @@ function httpRequest(element, url, action, data, onLoad){
     xhr.send(data);
 
     xhr.onload = xhr.onerror = function () {
-//        preloader.style.display = 'none';
         showPreloader(preloaderWrapper, preloader, false);
         var response = xhr.response;
         //console.log(response);
@@ -249,6 +231,7 @@ function getPreloaderWrapper(element) {
     return wrapper;
 }
 
+//показать-закрыть прелоудер
 function showPreloader(wrapper, preloader, show) {
     if (show) {
         if (wrapper) {
@@ -269,7 +252,6 @@ function showPreloader(wrapper, preloader, show) {
 
 
 //поиск родительского узла с нужным классом
-
 function getParentTargetElement(element, className, self){
     if (self == true) {
         target = element;
@@ -314,7 +296,6 @@ function removeActiveNodes(){
 function checkRepeated(element) {
     var li = getParentTargetElement(element, 'mod-tree__item', true),
         id = li.getAttribute('data-id'),
-        //grandParentLi = getParents(li, 6),
         parentLi = getParentTargetElement(li, 'mod-tree__item', false);
     if (parentLi == null) {
         return true;

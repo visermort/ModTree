@@ -67,6 +67,10 @@ $tmp = array(
         'type' => 'numberfield',
         'value' => 1,
     ],
+    'customCss' => [
+        'type' => 'numberfield',
+        'value' => 0,
+    ],
 );
 
 foreach ($tmp as $k => $v) {
@@ -75,7 +79,8 @@ foreach ($tmp as $k => $v) {
             'name' => $k,
             'desc' => PKG_NAME_LOWER . '_prop_' . $k,
             'lexicon' => PKG_NAME_LOWER . ':properties',
-        ), $v
+        ),
+        $v
     );
 }
 

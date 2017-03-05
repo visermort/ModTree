@@ -1,6 +1,10 @@
 Changelog for modTree.
 
+0.2.0-beta
+==============
+- css and js loaded simultaneously with the snippet, there is no need to connect them in a template
+- displaying search fields, and search is performed in both modes, &queryLinks=`0` or `1`
 
 0.1.0-beta
 ==============
--start project
+- start project
