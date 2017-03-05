@@ -48,8 +48,8 @@
                 [[%modtree_chunk_record]]
                 <span data-name="countResult"> [[+pagination.countResult]] </span>
                 [[%modtree_chunk_from]]
-                <span data-name="count"> [[+pagination.count]] </span>
-                .[[%modtree_chunk_page]]
+                <span data-name="count"> [[+pagination.count]]</span>
+                . [[%modtree_chunk_page]]
                 <span data-name="page"> [[+pagination.page]] </span>
                 [[%modtree_chunk_from]]
                 <span data-name="pages"> [[+pagination.pages]]</span>

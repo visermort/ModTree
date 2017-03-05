@@ -61,12 +61,14 @@ $pagination = [];
 
 //поля для поиска
 
-$modx->lexicon->load($modx->getOption('cultureKey').':resource');
+//$modx->lexicon->load($modx->getOption('cultureKey').':resource');
+$modx->lexicon->load($modx->getOption('cultureKey').':default');
 
 foreach ($searchFields as $searchField) {
     $itemsSearch .= $modx->getChunk($tplSearchField, [
         'name' => $searchField,
-        'label' => $modx->lexicon('resource_'.$searchField),//$searchField,
+  //      'label' => $modx->lexicon('resource_'.$searchField),//$searchField,
+        'label' => $modx->lexicon($searchField),//$searchField,
     ]);
 }
 

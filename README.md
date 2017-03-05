@@ -7,8 +7,9 @@ Make links between resources on admin custom manager page.
 ![Making link on CMP](source/readme/modtree.jpg)
 
 Start seach when the page loads:
->&queryLinks=`1` (default) - linked resources,
->&queryLinks=`0` - child resources for &parent (default current page).
+>&queryLinks=`1` (default) - linked resources &parent (default current page),
+
+>&queryLinks=`0` - child resources for &parent.
 
 Then, when you click on the resources icons, searches for related resources of them.
 
@@ -18,7 +19,7 @@ When you click on resource the resource content is displayed.
 
 See result on [live demo](http://modtree.visermort.ru/examples.html)
 
-[Install](http://modtree.visermort.ru/install.html)
+How to [install](http://modtree.visermort.ru/install.html)
 
 Uses AJAX. JQuery not required.
 
@@ -26,7 +27,7 @@ Uses AJAX. JQuery not required.
 
 #####Display child resources
 
-&queryLinks=`0`. Display child resources of resource 7 instead of related.
+&queryLinks=`0`. Display child resources of resource 7 on start search.
 
 ```
 [[modTree?
@@ -38,7 +39,7 @@ Uses AJAX. JQuery not required.
 
 #####Display linked resources
 
-Display related resources of resource 15.
+Display related resources of resource 15 on start search.
 
 ```
 [[modTree?
