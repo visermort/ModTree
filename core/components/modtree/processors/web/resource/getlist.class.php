@@ -3,8 +3,8 @@
 class modTreeResourceGetProcessor extends  modProcessor
 {
 
-   // private $queryText;
-   // private $queryCountText;
+//    private $queryText;
+//    private $queryCountText;
 
     public function checkPermissions()
     {
@@ -117,13 +117,13 @@ class modTreeResourceGetProcessor extends  modProcessor
             $query->select(['count(*)']);
         }
 
-        $query->where(['published'=> 1, 'deleted' => 0, 'searchable' => 1]);
+        $query->where(['published'=> 1, 'deleted' => 0, 'pagetitle:!=' => 'modtree_resource']);
         if ($parent) {
             $query->where(['parent'=> $parent]);
         }
         if (isset($searchParams)) {
             foreach ($searchParams as $searchParam) {
-                $query->where([$searchParam->name.':like' => '%'.$searchParam->value.'%']);
+                $query->where([$searchParam->name.':like' => '%'.$this->modx->sanitizeString($searchParam->value).'%']);
             }
         }
         if (!$count) {
@@ -152,27 +152,27 @@ class modTreeResourceGetProcessor extends  modProcessor
             if ($linkWay > 0) {
                 $sql = 'select mr.id from ' . $resources . ' mr INNER JOIN ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave`' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1 and `mt`.`active` = 1 ';
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 and  not `pagetitle`="modtree_resource" and `mt`.`active` = 1 ';
             } elseif ($linkWay < 0) {
                 $sql = 'select mr.id from ' .  $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`master` ' . ' where '.
-                    ' `master` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1 and `mt`.`active` = 1 ';
+                    ' `master` = :id and `published` = 1 and `deleted` = 0 and not `pagetitle`="modtree_resource" and `mt`.`active` = 1 ';
             } else {
                 $sql = 'select mr.id from ' . $resources . ' mr inner join ' .
                     $treeItems . ' mt on mr.`id` = mt.`slave` ' . ' where '.
-                    ' `master` = :id  and `published` = 1 and `deleted` = 0  and `searchable` = 1 and `mt`.`active` = 1 ';
+                    ' `master` = :id  and `published` = 1 and `deleted` = 0  and not `pagetitle`="modtree_resource" and `mt`.`active` = 1 ';
                 if (isset($searchParams)) {
                     foreach ($searchParams as $searchParam) {
-                        $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
+                        $sql .= ' and `'.$searchParam->name.'` like  CONCAT("%",:'.$searchParam->name.', "%")';
                     }
                 }
                 $sql .='union select mr.id from ' .
                     $resources . ' mr inner join ' . $treeItems . ' mt on mr.`id` = mt.`master`  where '.
-                    ' `slave` = :id and `published` = 1 and `deleted` = 0 and `searchable` = 1 and `mt`.`active` = 1 ';
+                    ' `slave` = :id and `published` = 1 and `deleted` = 0 and not `pagetitle`="modtree_resource" and `mt`.`active` = 1 ';
             }
             if (isset($searchParams)) {
                 foreach ($searchParams as $searchParam) {
-                    $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
+                    $sql .= ' and `'.$searchParam->name.'` like  CONCAT("%",:'.$searchParam->name.', "%")' ;
                 }
             }
             $sql = 'select count(*) from (' . $sql . ') as tt';
@@ -191,7 +191,7 @@ class modTreeResourceGetProcessor extends  modProcessor
                     ' `master` = :id and `published` = 1 and `deleted` = 0 and `mt`.`active` = 1 ';
                 if (isset($searchParams)) {
                     foreach ($searchParams as $searchParam) {
-                        $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
+                        $sql .= ' and `'.$searchParam->name.'` like  CONCAT("%",:'.$searchParam->name.', "%")'  ;
                     }
                 }
                 $sql .= 'union select mr.*, mt.linkdate, mt.linktitle, mt.linktext from ' .
@@ -200,7 +200,7 @@ class modTreeResourceGetProcessor extends  modProcessor
             }
             if (isset($searchParams)) {
                 foreach ($searchParams as $searchParam) {
-                    $sql .= ' and `'.$searchParam->name.'` like  "%'.$searchParam->value.'%" ' ;
+                    $sql .= ' and `'.$searchParam->name.'` like CONCAT("%",:'.$searchParam->name.', "%")' ;
                 }
             }
             $sql .= 'order by `' . $sortBy .'` ' .$sortDir;
@@ -211,11 +211,18 @@ class modTreeResourceGetProcessor extends  modProcessor
         //для отладки запросы
 //        if ($count) {
 //            $this->queryCountText = $sql;
+//
 //        } else {
 //            $this->queryText = $sql;
 //        }
         $query = $this->modx->prepare($sql);
         $query->bindParam(':id', $parent);
+        if (isset($searchParams)) {
+            foreach ($searchParams as $searchParam) {
+                $query->bindParam(':'.$searchParam->name, $this->modx->sanitizeString($searchParam->value));
+            }
+        }
+
         $query->execute();
         if ($count) {
             return (int) $query->fetchColumn();
