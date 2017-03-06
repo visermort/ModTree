@@ -88,6 +88,7 @@ function makeChildNodes(element, data) {
             liTemplate = hidden.getElementsByClassName('mod-tree__item-tree')[0],//.cloneNode(true),
             content = li.getElementsByClassName('mod-tree__item-content');
         ulNew.innerHTML = '';
+        fadeOut(ulNew, 0);//скрываем его
         liTemplate.getElementsByClassName('mod-tree__item-title')[0].classList.remove('active');
         content[0].append(ulNew);
         data.items.forEach(function (item, index) {
@@ -102,6 +103,7 @@ function makeChildNodes(element, data) {
         });
         element.classList.remove('promised');
         element.classList.add('open');
+        fadeIn(ulNew, 200);//показываем его
     } else {
         element.classList.remove('promised');
         element.classList.add('leaf');
@@ -272,6 +274,9 @@ function openItem(element) {
     li.classList.add('open');
     element.classList.remove('closed');
     element.classList.add('open');
+    //дочерние элементы - открываем
+    content = li.getElementsByClassName('mod-tree__item-content')[0];
+    fadeIn(content, 200);
 }
 
 //закрыть узел - назначение классов
@@ -281,6 +286,9 @@ function closeItem(element) {
     li.classList.add('closed');
     element.classList.remove('open');
     element.classList.add('closed');
+    //дочерние элементы - закрываем
+    content = li.getElementsByClassName('mod-tree__item-content')[0];
+    fadeOut(content, 200);
 }
 
 //снатие признака активности у всех узлов
@@ -357,5 +365,58 @@ function makeSeachResult(element, data)
     } else {
         replaceItemData(element, data);
         element.classList.remove('hidden');
+    }
+}
+
+function fadeIn(elem, interval){
+    if (!elem) {
+        return;
+    }
+
+    elem.style.opacity = 0;
+    elem.style.filter = "alpha(opacity=0)";
+    elem.style.display = "inline-block";
+    elem.style.visibility = "visible";
+
+    if (interval) {
+        var opacity = 0;
+        var timer = setInterval(function() {
+            opacity += 50 / interval;
+            if (opacity >= 1) {
+                clearInterval(timer);
+                opacity = 1;
+            }
+            elem.style.opacity = opacity;
+            elem.style.filter = "alpha(opacity=" + opacity * 100 + ")";
+        }, 50);
+    } else {
+        elem.style.opacity = 1;
+        elem.style.filter = "alpha(opacity=1)";
+    }
+}
+
+function fadeOut(elem, interval){
+    if(!elem) {
+        return;
+    }
+
+    if (interval) {
+        var opacity = 1;
+        var timer = setInterval(function() {
+            opacity -= 50 / interval;
+            if (opacity <= 0) {
+                clearInterval(timer);
+                opacity = 0;
+                elem.style.display = "none";
+                elem.style.visibility = "hidden";
+            }
+            elem.style.opacity = opacity;
+            elem.style.filter = "alpha(opacity=" + opacity * 100 + ")";
+        }, 50 );
+    } else {
+        elem.style.opacity = 0;
+        elem.style.filter = "alpha(opacity=0)";
+        elem.style.display = "none";
+        elem.style.visibility = "hidden";
     }
 }

@@ -33,7 +33,7 @@
         </div>
         [[-          list after search or after page load         ]]
         <div class="mod-tree__panel">
-            <ul  class="mod-tree__list [[+items:is=``:then=`hidden`]]"
+            <ul  class="mod-tree__list"
                 data-limit="[[+limit]]"
                 data-linkway="[[+linkWay]]"
                 data-sortby="[[+sortBy]]"

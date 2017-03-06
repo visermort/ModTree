@@ -73,14 +73,15 @@
 
 .mod-tree__item-content {
     margin-left: 18px;
-    overflow: hidden;
+    /*overflow: hidden;*/
+    height: auto;
 }
 
 .mod-tree__item.closed > .mod-tree__item-content {
-    height: 0;
+    /*height: 0;*/
 }
 .mod-tree__item.open > .mod-tree__item-content {
-    height: auto;
+    /*height: auto;*/
 }
 
 
