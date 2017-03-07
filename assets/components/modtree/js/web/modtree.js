@@ -102,6 +102,7 @@ function makeChildNodes(element, data) {
         });
         element.classList.remove('promised');
         element.classList.add('open');
+        li.classList.add('open');
     } else {
         element.classList.remove('promised');
         element.classList.add('leaf');
@@ -268,7 +269,7 @@ function getParentTargetElement(element, className, self){
 //открыть узел - назначение классов
 function openItem(element) {
     li = getParentTargetElement(element, 'mod-tree__item', true);
-    li.classList.remove('closed');
+ //   li.classList.remove('closed');
     li.classList.add('open');
     element.classList.remove('closed');
     element.classList.add('open');
@@ -278,10 +279,11 @@ function openItem(element) {
 function closeItem(element) {
     li = getParentTargetElement(element, 'mod-tree__item', true);
     li.classList.remove('open');
-    li.classList.add('closed');
+  //  li.classList.add('closed');
     element.classList.remove('open');
     element.classList.add('closed');
 }
+
 
 //снатие признака активности у всех узлов
 function removeActiveNodes(){
