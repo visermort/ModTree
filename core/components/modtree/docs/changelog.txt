@@ -1,5 +1,10 @@
 Changelog for modTree.
 
+0.2.1-beta
+==============
+- css. Cursor "Pointer" on tree arrow with border.
+
+
 0.2.0-beta
 ==============
 - css and js loaded simultaneously with the snippet, there is no need to connect them in a template
