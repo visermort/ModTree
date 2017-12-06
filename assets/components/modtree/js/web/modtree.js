@@ -103,6 +103,7 @@ function makeChildNodes(element, data) {
         element.classList.remove('promised');
         element.classList.add('open');
         li.classList.add('open');
+        setParentsHeights(li);
     } else {
         element.classList.remove('promised');
         element.classList.add('leaf');
@@ -159,6 +160,7 @@ function makeSearchList(element, data) {
             //события на клик
             liNew.getElementsByClassName('mod-tree__item-icon')[0].onclick = iconClick;
             liNew.getElementsByClassName('mod-tree__item-title')[0].onclick = titleClick;
+
         });
         if (data.pagination.buttons != null && data.pagination.buttons.length > 1) {
             data.pagination.buttons.forEach(function(item, index){
@@ -181,6 +183,7 @@ function makeSearchList(element, data) {
             paginate.classList.remove('hidden');
         }
         makeSeachResult(searchResult, data.pagination);
+
 
     } else {
         ul.classList.add('hidden');
@@ -268,20 +271,33 @@ function getParentTargetElement(element, className, self){
 
 //открыть узел - назначение классов
 function openItem(element) {
-    li = getParentTargetElement(element, 'mod-tree__item', true);
+    var li = getParentTargetElement(element, 'mod-tree__item', true);
  //   li.classList.remove('closed');
     li.classList.add('open');
     element.classList.remove('closed');
     element.classList.add('open');
+    setParentsHeights(element);
+    // var div = li.querySelector('.mod-tree__item-content');
+    // console.log(li, div);
+    // console.log(div.scrollHeight);
+    // if (div) {
+    //     div.style.height = div.scrollHeight +'px';
+    // }
 }
 
 //закрыть узел - назначение классов
 function closeItem(element) {
-    li = getParentTargetElement(element, 'mod-tree__item', true);
+    var li = getParentTargetElement(element, 'mod-tree__item', true);
     li.classList.remove('open');
   //  li.classList.add('closed');
     element.classList.remove('open');
     element.classList.add('closed');
+    setParentsHeights(element);
+    // var div = li.querySelector('.mod-tree__item-content');
+    // console.log(li, div, div.scrollHeight);
+    // if (div) {
+    //     div.style.height = 0;
+    // }
 }
 
 
@@ -318,7 +334,7 @@ function checkRepeated(element) {
 function replaceItemData(element, data){
     if (element != null && element.nodeType == 1) {
         //если тип - элемент, делаем замену содержимого или для каждого дочернего  вызываем снова себя
-        dataName = element.getAttribute('data-name');
+        var dataName = element.getAttribute('data-name');
         if (dataName != null) {
             element.innerHTML = data[dataName];
         }
@@ -332,7 +348,7 @@ function replaceItemData(element, data){
 
 //замена данных в шаблоне ресурса
 function replaceResourceData(data, idPrefix) {
-
+    var element;
     for (var key in data) {
         element = document.getElementById(idPrefix+key);
         if (element != null) {
@@ -360,4 +376,27 @@ function makeSeachResult(element, data)
         replaceItemData(element, data);
         element.classList.remove('hidden');
     }
+}
+
+//для cебя и всех родительских  задать размер списков
+function setParentsHeights(element)
+{
+    var parents = [];
+    var target = element;
+    do {
+        if (target && target.classList.contains('mod-tree__item')) {
+            parents[parents.length] = target;
+        }
+        target = target.parentElement;
+    } while (target != null);
+    for(var i=0; i < parents.length; i++) {
+        var div = parents[i].querySelector('.mod-tree__item-content');
+        if (div) {
+            div.style.height = parents[i].classList.contains('open') ? div.scrollHeight +'px' : '0';
+
+            console.log(i, div.style.height);
+        }
+    }
+
+
 }

@@ -49,6 +49,7 @@
     height: 18px;
     background-repeat: no-repeat;
     margin-top: 5px;
+    cursor: pointer;
 }
 
 .mod-tree__item-icon.open {
@@ -77,14 +78,18 @@
 .mod-tree__item-content {
     margin-left: 18px;
     overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.4s cubic-bezier(0,1,0,.95);
+    height: 0;
+    /*max-height: 0;*/
+    -webkit-transition: height 0.4s ease;
+    -moz-transition: height 0.4s ease;
+    -o-transition: height 0.4s ease;
+    transition: height 0.4s ease;
 }
 
-.mod-tree__item.open > .mod-tree__item-content {
-    max-height: 9999px;
-    transition: max-height 0.4s cubic-bezier(1,.05,1,0);
-}
+/*.mod-tree__item.open > .mod-tree__item-content {*/
+    /*max-height: 9999px;*/
+    /*transition: max-height 0.4s cubic-bezier(1,.05,1,0);*/
+/*}*/
 
 .mod-tree__panel {
     border: 1px solid #ddd;
