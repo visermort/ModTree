@@ -1,4 +1,4 @@
-##ModTree
+## ModTree
 
 With this component, you can link resources of your site with each other and show them on page as a tree.
 
@@ -25,7 +25,7 @@ Uses AJAX. JQuery not required.
 
 ### Examples:
 
-#####Display child resources
+##### Display child resources
 
 &queryLinks=`0`. Display child resources of resource 7 on start search.
 
@@ -37,7 +37,7 @@ Uses AJAX. JQuery not required.
     ]]
 ```
 
-#####Display linked resources
+##### Display linked resources
 
 Display related resources of resource 15 on start search.
 
@@ -48,9 +48,9 @@ Display related resources of resource 15 on start search.
     ]]
 ```
 
-###Snippet parameters
+### Snippet parameters
 
-#####Result parameters
+##### Result parameters
 
 | Name                  | Default                     | Description                                                                                     |
 | --------------------- | ------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -67,7 +67,7 @@ Display related resources of resource 15 on start search.
 | **&customCss**        | 0                           | 1 - not linked component CSS. If you use your own styles you may disable component CSS |
 
 
-#####Search parameters
+##### Search parameters
 
 | Name                  | Default                     | Description                                                                                     |
 | --------------------- | ------------------------------------------------- | ------------------------------------------------------------------------- |
