@@ -49,16 +49,28 @@
     height: 18px;
     background-repeat: no-repeat;
     margin-top: 5px;
+    cursor: pointer;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    background-position: 1px 1px;
 }
 
 .mod-tree__item-icon.open {
     background-image: url(/assets/components/modtree/img/arrow_expanded.png);
 }
+.mod-tree__item-icon.open:hover {
+    border-color: rgba(0, 126, 161, 0.34);
+}
 
 .mod-tree__item-icon.closed,
-.mod-tree__item-icon.promised
-{
+.mod-tree__item-icon.promised {
     background-image: url(/assets/components/modtree/img/arrow_right.png);
+}
+.mod-tree__item-icon.closed:hover {
+    border-color: rgba(0, 126, 161, 0.34);
+}
+.mod-tree__item-icon.promised:hover {
+    border-color: rgba(0, 126, 161, 0.34);
 }
 
 .mod-tree__item-icon.leaf  {
@@ -139,6 +151,8 @@
 }
 .mod-tree_item-icon-preloader {
     vertical-align: top;
+    margin-top: 2px;
+    margin-left: 2px;
 }
 
 @media (max-width: 767px) {
