@@ -39,6 +39,7 @@
 }
 .mod-tree__item-title.active {
     border: 1px solid #137899;
+    border-radius: 3px;
 }
 .mod-tree__list {
     padding: 0 10px 0 0 ;
@@ -49,6 +50,7 @@
     height: 18px;
     background-repeat: no-repeat;
     margin-top: 5px;
+    margin-left: 5px;
     cursor: pointer;
     border: 1px solid #fff;
     border-radius: 50%;
@@ -62,7 +64,9 @@
     border-color: rgba(0, 126, 161, 0.34);
 }
 
-.mod-tree__item-icon.closed,
+.mod-tree__item-icon.closed {
+    background-image: url(/assets/components/modtree/img/arrow_right.png);
+}
 .mod-tree__item-icon.promised {
     background-image: url(/assets/components/modtree/img/arrow_right.png);
 }
@@ -74,7 +78,8 @@
 }
 
 .mod-tree__item-icon.leaf  {
-    background-image: url(/assets/components/modtree/img/document.gif);
+    background-image: url(/assets/components/modtree/img/document2.gif);
+    border-radius: 0;
 }
 
 .mod-tree__item-icon.loading {

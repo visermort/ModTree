@@ -92,7 +92,7 @@ function makeChildNodes(element, data) {
         content[0].append(ulNew);
         data.items.forEach(function (item, index) {
             //берём родительский li , в цикле вставляем в новый ul, заменяя значения
-            liNew = liTemplate.cloneNode(true);
+            var liNew = liTemplate.cloneNode(true);
             liNew.setAttribute('data-id', item.id);
             replaceItemData(liNew, item);
             ulNew.append(liNew);
@@ -116,8 +116,8 @@ function searchResources(e) {
         fields = fieldsDiv.getElementsByClassName('mod-tree__search-fields-item-field'),
         params = [];
     Array.from(fields).forEach(function(field, key) {
-        name = field.getAttribute('name');
-        value = field.value;
+        var name = field.getAttribute('name');
+        var value = field.value;
         //console.log(name, value);
         if (value != "") {
             params.push({ name: name, value: value});
@@ -196,7 +196,7 @@ function httpRequest(element, url, action, data, onLoad){
     if (preloaderWrapper) {
         var preloader = preloaderWrapper.getElementsByClassName('preloader-gif')[0];
     }
-    xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.setRequestHeader('Action', action);
@@ -254,6 +254,7 @@ function showPreloader(wrapper, preloader, show) {
 
 //поиск родительского узла с нужным классом
 function getParentTargetElement(element, className, self){
+    var target = null;
     if (self == true) {
         target = element;
     } else {
@@ -268,7 +269,7 @@ function getParentTargetElement(element, className, self){
 
 //открыть узел - назначение классов
 function openItem(element) {
-    li = getParentTargetElement(element, 'mod-tree__item', true);
+    var li = getParentTargetElement(element, 'mod-tree__item', true);
  //   li.classList.remove('closed');
     li.classList.add('open');
     element.classList.remove('closed');
@@ -277,7 +278,7 @@ function openItem(element) {
 
 //закрыть узел - назначение классов
 function closeItem(element) {
-    li = getParentTargetElement(element, 'mod-tree__item', true);
+    var li = getParentTargetElement(element, 'mod-tree__item', true);
     li.classList.remove('open');
   //  li.classList.add('closed');
     element.classList.remove('open');
@@ -318,7 +319,7 @@ function checkRepeated(element) {
 function replaceItemData(element, data){
     if (element != null && element.nodeType == 1) {
         //если тип - элемент, делаем замену содержимого или для каждого дочернего  вызываем снова себя
-        dataName = element.getAttribute('data-name');
+        var dataName = element.getAttribute('data-name');
         if (dataName != null) {
             element.innerHTML = data[dataName];
         }
@@ -334,7 +335,7 @@ function replaceItemData(element, data){
 function replaceResourceData(data, idPrefix) {
 
     for (var key in data) {
-        element = document.getElementById(idPrefix+key);
+        var element = document.getElementById(idPrefix+key);
         if (element != null) {
             if (key.substring(0, 3) == 'uri') {
                 //обрабатываем ссылки - особый случай
