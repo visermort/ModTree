@@ -1,9 +1,12 @@
 Changelog for modTree.
 
+0.3.0-beta
+==============
+- Admin panel. Set margins for main panel.
+
 0.2.1-beta
 ==============
 - css. Cursor "Pointer" on tree arrow with border.
-
 
 0.2.0-beta
 ==============
